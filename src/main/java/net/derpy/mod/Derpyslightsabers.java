@@ -1,5 +1,6 @@
 package net.derpy.mod;
 
+import net.derpy.mod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -12,7 +13,7 @@ public class Derpyslightsabers implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
-
+		ModItems.registerModItems();
 		LOGGER.info("Hello Fabric world!");
 	}
 }
