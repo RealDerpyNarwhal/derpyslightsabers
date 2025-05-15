@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "derpyslightsabers",
+	"version": "${version}",
+	"name": "derpyslightsabers",
+	"description": "This is my first mod!",
+	"authors": [
+		"RealDerpyNarwhal"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/derpyslightsabers/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.derpy.mod.Derpyslightsabers"
+		],
+		"client": [
+			"net.derpy.mod.DerpyslightsabersClient"
+		],
+		"fabric-datagen": [
+			"net.derpy.mod.DerpyslightsabersDataGenerator"
+		]
+	},
+	"mixins": [
+		"derpyslightsabers.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
