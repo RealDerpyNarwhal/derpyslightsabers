@@ -2,7 +2,13 @@ package net.derpy.mod.item.custom;
 
 import net.derpy.mod.item.client.AnakinsLightsaberRenderer;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -20,6 +26,19 @@ public class AnakinsLightsaber extends Item implements GeoItem {
 
     public AnakinsLightsaber(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+
+        if (!world.isClient && world instanceof ServerWorld serverWorld) {
+            long animId = GeoItem.getOrAssignId(stack, serverWorld);
+            GeoItem animatable = (GeoItem) stack.getItem();
+            animatable.triggerAnim(user, animId, "controller", "ignite");
+        }
+
+        return TypedActionResult.success(stack, world.isClient());
     }
 
     @Override

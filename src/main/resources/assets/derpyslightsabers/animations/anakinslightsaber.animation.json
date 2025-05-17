@@ -1,8 +1,10 @@
 {
+	"geckolib_format_version": 2,
 	"format_version": "1.8.0",
 	"animations": {
 		"idle": {
 			"animation_length": 0.25,
+			"loop": true,
 			"bones": {
 				"Hilt": {
 					"scale": {
@@ -16,9 +18,9 @@
 				}
 			}
 		},
-		"ignite.animation": {
-			"loop": "hold_on_last_frame",
+		"ignite": {
 			"animation_length": 0.625,
+			"loop": "hold_on_last_frame",
 			"bones": {
 				"blade": {
 					"scale": {
@@ -32,6 +34,5 @@
 				}
 			}
 		}
-	},
-	"geckolib_format_version": 2
+	}
 }
