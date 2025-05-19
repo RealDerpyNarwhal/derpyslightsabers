@@ -20,43 +20,70 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AnakinsLightsaber extends Item implements GeoItem {
     private static final RawAnimation IGNITE_ANIM = RawAnimation.begin().then("ignite", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation RETRACT_ANIM = RawAnimation.begin().then("retract", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final long DOUBLE_CLICK_THRESHOLD_MS = 300; // 300ms window for double sneak
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
+    // Stores last sneak-right-click time per player
+    private static final HashMap<UUID, Long> lastSneakClick = new HashMap<>();
+
     public AnakinsLightsaber(Settings settings) {
         super(settings);
-        SingletonGeoAnimatable.registerSyncedAnimatable(this); // ✅ GeckoLib 4 registration
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (!world.isClient && user.isSneaking() && world instanceof ServerWorld serverWorld) {
-            long id = GeoItem.getOrAssignId(stack, serverWorld);
-            triggerAnim(user, id, "controller", "ignite"); // ✅ GeckoLib 4 trigger
-            System.out.println("[AnakinsLightsaber] Triggered ignite animation for ID: " + id);
+        if (!world.isClient && world instanceof ServerWorld serverWorld) {
+            UUID playerId = user.getUuid();
+            long currentTime = System.currentTimeMillis();
+
+            if (user.isSneaking()) {
+                long lastClick = lastSneakClick.getOrDefault(playerId, 0L);
+                long timeSinceLast = currentTime - lastClick;
+                lastSneakClick.put(playerId, currentTime); // update every time
+
+                long id = GeoItem.getOrAssignId(stack, serverWorld);
+
+                if (timeSinceLast < DOUBLE_CLICK_THRESHOLD_MS) {
+                    // Double sneak-click -> retract
+                    triggerAnim(user, id, "controller", "retract");
+                    System.out.println("[AnakinsLightsaber] Double sneak-click -> RETRACT");
+                } else {
+                    // Single sneak-click -> ignite
+                    triggerAnim(user, id, "controller", "ignite");
+                    System.out.println("[AnakinsLightsaber] Single sneak-click -> IGNITE");
+                }
+
+                return TypedActionResult.success(stack, world.isClient());
+            }
         }
 
-        return TypedActionResult.success(stack, world.isClient());
+        return TypedActionResult.pass(stack);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(
                 new AnimationController<>(this, "controller", 0, this::predicate)
-                        .triggerableAnim("ignite", IGNITE_ANIM) // ✅ Register triggerable animation
+                        .triggerableAnim("ignite", IGNITE_ANIM)
+                        .triggerableAnim("retract", RETRACT_ANIM)
         );
     }
 
     private PlayState predicate(AnimationState<AnakinsLightsaber> state) {
-        return PlayState.STOP; // We only play animations when triggered
+        return PlayState.STOP;
     }
 
     @Override
