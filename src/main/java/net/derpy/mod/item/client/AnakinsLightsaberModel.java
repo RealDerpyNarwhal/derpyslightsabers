@@ -8,16 +8,16 @@ import software.bernie.geckolib.model.GeoModel;
 public class AnakinsLightsaberModel extends GeoModel<AnakinsLightsaber> {
     @Override
     public Identifier getModelResource(AnakinsLightsaber object) {
-        return new Identifier(Derpyslightsabers.MOD_ID, "geo/anakinslightsaber.geo.json");
+        return new Identifier(Derpyslightsabers.MOD_ID, "geo/anakins_lightsaber.geo.json");
     }
 
     @Override
     public Identifier getTextureResource(AnakinsLightsaber object) {
-        return new Identifier(Derpyslightsabers.MOD_ID, "textures/item/anakinslightsaber.png");
+        return new Identifier(Derpyslightsabers.MOD_ID, "textures/item/anakins_lightsaber.png");
     }
 
     @Override
     public Identifier getAnimationResource(AnakinsLightsaber object) {
-        return new Identifier(Derpyslightsabers.MOD_ID, "animations/anakinslightsaber.animation.json");
+        return new Identifier(Derpyslightsabers.MOD_ID, "animations/anakins_lightsaber.animation.json");
     }
 }

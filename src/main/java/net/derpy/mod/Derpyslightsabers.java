@@ -6,14 +6,25 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import software.bernie.geckolib.GeckoLib;
+import software.bernie.geckolib.animatable.GeoItem;
+
 public class Derpyslightsabers implements ModInitializer {
 	public static final String MOD_ID = "derpyslightsabers";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
+		// Step 1: Initialize GeckoLib
+		GeckoLib.initialize();
 
+		// Step 2: Register all mod items
 		ModItems.registerModItems();
-		LOGGER.info("Hello Fabric world!");
+
+		// Step 3: Register synced animatable for GeckoLib to sync animations
+		// Make sure ANAKINSLIGHTSABER is actually an instance of a GeoAnimatable item (which it is)
+		GeoItem.registerSyncedAnimatable(ModItems.ANAKINS_LIGHTSABER);
+
+		LOGGER.info("Derpy's Lightsabers mod initialized successfully!");
 	}
 }

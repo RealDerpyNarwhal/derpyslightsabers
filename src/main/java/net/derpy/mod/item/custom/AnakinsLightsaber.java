@@ -9,6 +9,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -26,19 +27,34 @@ public class AnakinsLightsaber extends Item implements GeoItem {
 
     public AnakinsLightsaber(Settings settings) {
         super(settings);
+        GeoItem.registerSyncedAnimatable(this);
+    }
+
+    public void playIgniteAnimation(PlayerEntity user, ItemStack stack, World world) {
+        if (!world.isClient && world instanceof ServerWorld serverWorld) {
+            long animId = GeoItem.getOrAssignId(stack, serverWorld);
+            System.out.println("[AnakinsLightsaber] Anim ID: " + animId);
+
+            if (animId > 0) {
+                GeoItem animatable = (GeoItem) stack.getItem();
+                System.out.println("[AnakinsLightsaber] Triggering 'ignite' animation");
+                animatable.triggerAnim(user, animId, "controller", "ignite");
+            } else {
+                System.out.println("[AnakinsLightsaber] Failed to assign animation ID for stack: " + stack);
+            }
+        }
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (!world.isClient && world instanceof ServerWorld serverWorld) {
-            long animId = GeoItem.getOrAssignId(stack, serverWorld);
-            GeoItem animatable = (GeoItem) stack.getItem();
-            animatable.triggerAnim(user, animId, "controller", "ignite");
+        if (user.isSneaking()) {
+            playIgniteAnimation(user, stack, world);
+            return TypedActionResult.success(stack, world.isClient());
         }
 
-        return TypedActionResult.success(stack, world.isClient());
+        return TypedActionResult.pass(stack);
     }
 
     @Override
@@ -69,8 +85,9 @@ public class AnakinsLightsaber extends Item implements GeoItem {
     }
 
     private PlayState predicate(AnimationState<AnakinsLightsaber> state) {
-        state.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
-        return PlayState.CONTINUE;
+        AnimationController<?> controller = state.getController();
+        // Default to not playing animation unless one is triggered
+        return PlayState.STOP;
     }
 
     @Override

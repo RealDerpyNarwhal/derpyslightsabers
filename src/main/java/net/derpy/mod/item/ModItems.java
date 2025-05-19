@@ -12,10 +12,12 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
-    public static final AnakinsLightsaber ANAKINSLIGHTSABER = registerItem("anakinslightsaber", new AnakinsLightsaber(new FabricItemSettings()));
+
+    public static final AnakinsLightsaber ANAKINS_LIGHTSABER = registerItem(
+            "anakins_lightsaber", new AnakinsLightsaber(new FabricItemSettings()));
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
-        entries.add(ANAKINSLIGHTSABER);
+        entries.add(ANAKINS_LIGHTSABER);
     }
 
     private static <T extends Item> T registerItem(String name, T item) {
@@ -24,7 +26,6 @@ public class ModItems {
 
     public static void registerModItems() {
         Derpyslightsabers.LOGGER.info("Registering Mod Items for " + Derpyslightsabers.MOD_ID);
-
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientItemGroup);
     }
 }
