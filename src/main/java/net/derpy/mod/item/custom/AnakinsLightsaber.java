@@ -11,50 +11,52 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
+import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AnakinsLightsaber extends Item implements GeoItem {
+    private static final RawAnimation IGNITE_ANIM = RawAnimation.begin().then("ignite", Animation.LoopType.HOLD_ON_LAST_FRAME);
+
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public AnakinsLightsaber(Settings settings) {
         super(settings);
-        GeoItem.registerSyncedAnimatable(this);
-    }
-
-    public void playIgniteAnimation(PlayerEntity user, ItemStack stack, World world) {
-        if (!world.isClient && world instanceof ServerWorld serverWorld) {
-            long animId = GeoItem.getOrAssignId(stack, serverWorld);
-            System.out.println("[AnakinsLightsaber] Anim ID: " + animId);
-
-            if (animId > 0) {
-                GeoItem animatable = (GeoItem) stack.getItem();
-                System.out.println("[AnakinsLightsaber] Triggering 'ignite' animation");
-                animatable.triggerAnim(user, animId, "controller", "ignite");
-            } else {
-                System.out.println("[AnakinsLightsaber] Failed to assign animation ID for stack: " + stack);
-            }
-        }
+        SingletonGeoAnimatable.registerSyncedAnimatable(this); // ✅ GeckoLib 4 registration
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (user.isSneaking()) {
-            playIgniteAnimation(user, stack, world);
-            return TypedActionResult.success(stack, world.isClient());
+        if (!world.isClient && user.isSneaking() && world instanceof ServerWorld serverWorld) {
+            long id = GeoItem.getOrAssignId(stack, serverWorld);
+            triggerAnim(user, id, "controller", "ignite"); // ✅ GeckoLib 4 trigger
+            System.out.println("[AnakinsLightsaber] Triggered ignite animation for ID: " + id);
         }
 
-        return TypedActionResult.pass(stack);
+        return TypedActionResult.success(stack, world.isClient());
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(
+                new AnimationController<>(this, "controller", 0, this::predicate)
+                        .triggerableAnim("ignite", IGNITE_ANIM) // ✅ Register triggerable animation
+        );
+    }
+
+    private PlayState predicate(AnimationState<AnakinsLightsaber> state) {
+        return PlayState.STOP; // We only play animations when triggered
     }
 
     @Override
@@ -77,17 +79,6 @@ public class AnakinsLightsaber extends Item implements GeoItem {
     @Override
     public double getTick(Object itemStack) {
         return RenderUtils.getCurrentTick();
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private PlayState predicate(AnimationState<AnakinsLightsaber> state) {
-        AnimationController<?> controller = state.getController();
-        // Default to not playing animation unless one is triggered
-        return PlayState.STOP;
     }
 
     @Override
