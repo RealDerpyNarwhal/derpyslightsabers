@@ -20,21 +20,15 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AnakinsLightsaber extends Item implements GeoItem {
     private static final RawAnimation IGNITE_ANIM = RawAnimation.begin().then("ignite", Animation.LoopType.HOLD_ON_LAST_FRAME);
     private static final RawAnimation RETRACT_ANIM = RawAnimation.begin().then("retract", Animation.LoopType.HOLD_ON_LAST_FRAME);
-    private static final long DOUBLE_CLICK_THRESHOLD_MS = 300; // 300ms window for double sneak
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
-
-    // Stores last sneak-right-click time per player
-    private static final HashMap<UUID, Long> lastSneakClick = new HashMap<>();
 
     public AnakinsLightsaber(Settings settings) {
         super(settings);
@@ -46,26 +40,21 @@ public class AnakinsLightsaber extends Item implements GeoItem {
         ItemStack stack = user.getStackInHand(hand);
 
         if (!world.isClient && world instanceof ServerWorld serverWorld) {
-            UUID playerId = user.getUuid();
-            long currentTime = System.currentTimeMillis();
+            long id = GeoItem.getOrAssignId(stack, serverWorld);
+            boolean isOn = stack.getOrCreateNbt().getBoolean("LightsaberOn");
 
             if (user.isSneaking()) {
-                long lastClick = lastSneakClick.getOrDefault(playerId, 0L);
-                long timeSinceLast = currentTime - lastClick;
-                lastSneakClick.put(playerId, currentTime); // update every time
-
-                long id = GeoItem.getOrAssignId(stack, serverWorld);
-
-                if (timeSinceLast < DOUBLE_CLICK_THRESHOLD_MS) {
-                    // Double sneak-click -> retract
+                if (isOn) {
+                    // Lightsaber ON + Shift + Right Click = retract
                     triggerAnim(user, id, "controller", "retract");
-                    System.out.println("[AnakinsLightsaber] Double sneak-click -> RETRACT");
+                    stack.getOrCreateNbt().putBoolean("LightsaberOn", false);
+                    System.out.println("[AnakinsLightsaber] Shift + Right Click -> RETRACT");
                 } else {
-                    // Single sneak-click -> ignite
+                    // Lightsaber OFF + Shift + Right Click = ignite
                     triggerAnim(user, id, "controller", "ignite");
-                    System.out.println("[AnakinsLightsaber] Single sneak-click -> IGNITE");
+                    stack.getOrCreateNbt().putBoolean("LightsaberOn", true);
+                    System.out.println("[AnakinsLightsaber] Shift + Right Click -> IGNITE");
                 }
-
                 return TypedActionResult.success(stack, world.isClient());
             }
         }
@@ -83,7 +72,7 @@ public class AnakinsLightsaber extends Item implements GeoItem {
     }
 
     private PlayState predicate(AnimationState<AnakinsLightsaber> state) {
-        return PlayState.STOP;
+        return PlayState.STOP; // Prevent auto-playing animations
     }
 
     @Override
