@@ -9,8 +9,8 @@ public class DerpyslightsabersClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         GeckoLib.initialize();
+        ModItems.ANAKINS_LIGHTSABER.getRenderProvider().get();
 
-        // Force render provider creation to avoid "unregistered synced animatable" issues
-        ((GeoItem) ModItems.ANAKINS_LIGHTSABER).getRenderProvider().get();
+
     }
 }
