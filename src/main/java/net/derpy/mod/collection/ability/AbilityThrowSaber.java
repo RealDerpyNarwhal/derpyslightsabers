@@ -1,6 +1,8 @@
 package net.derpy.mod.collection.ability;
 
 import bond.thematic.api.abilities.weapon.effect.AbilityShieldThrow;
+import bond.thematic.api.registries.item.ThematicWeapon;
+import net.derpy.mod.item.ModItems;
 import net.derpy.mod.item.custom.AnakinsLightsaber;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -39,12 +41,19 @@ public class AbilityThrowSaber extends AbilityShieldThrow {
         }
     }
 
+    @Override
     public boolean isBlocked(LivingEntity livingEntity) {
-        ItemStack weapon = livingEntity.getEquippedStack(EquipmentSlot.MAINHAND);
-
-        if (!(weapon.getItem() instanceof AnakinsLightsaber)) {
-            return true;
+        if (livingEntity == null) {
+            return false;
         }
-        return super.isBlocked(livingEntity);
+
+        ItemStack mainHandStack = livingEntity.getEquippedStack(EquipmentSlot.MAINHAND);
+        if (mainHandStack == null) {
+            return false;
+        }
+
+        Item mainHandItem = mainHandStack.getItem();
+
+        return !(mainHandItem instanceof AnakinsLightsaber);
     }
 }

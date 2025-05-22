@@ -12,6 +12,8 @@ import net.derpy.mod.collection.armor.DerpyArmor;
 import net.minecraft.registry.Registries;
 
 public class LightsaberCollection extends Collection {
+    private static boolean registered = false;
+
     public LightsaberCollection() {
         super(Derpyslightsabers.MOD_ID);
     }
@@ -20,12 +22,12 @@ public class LightsaberCollection extends Collection {
     public void initServer() {
         super.initServer();
 
-        ThematicArmor derpyArmor = new DerpyArmor(this, "derpy_armor");
-
-        if (!Registries.ITEM.containsId(derpyArmor.getIdentifier())) {
+        if (!registered) {
+            ThematicArmor derpyArmor = new DerpyArmor(this, "derpy_armor");
             ArmorRegistry.registerArmor(derpyArmor);
             AbilityRegistry.registerAbility(new AbilityThrowSaber("throw_saber"));
         }
+        registered = true;
 
     }
 }
