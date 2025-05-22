@@ -1,33 +1,26 @@
 package net.derpy.mod.item.custom;
 
-import bond.thematic.api.callbacks.SwingHandCallback;
-import bond.thematic.api.network.AnimationPacketHandler;
-import bond.thematic.api.network.packet.S2CAnimPacket;
-import bond.thematic.api.registries.anims.AnimationManager;
-import bond.thematic.api.registries.armors.ability.ThematicAbility;
-import bond.thematic.api.registries.data.EntityComponents;
 import bond.thematic.api.registries.item.IAttackUse;
-import bond.thematic.mod.entity.thrown.OrbEntity;
 import com.funalex.themAnim.api.layered.AnimationStack;
-import com.funalex.themAnim.api.layered.IAnimation;
 import com.funalex.themAnim.api.layered.KeyframeAnimationPlayer;
-import com.funalex.themAnim.api.layered.ModifierLayer;
-import com.funalex.themAnim.api.layered.modifier.AbstractModifier;
 import com.funalex.themAnim.core.data.KeyframeAnimation;
 import com.funalex.themAnim.minecraftApi.PlayerAnimationAccess;
 import com.funalex.themAnim.minecraftApi.PlayerAnimationRegistry;
 import net.derpy.mod.Derpyslightsabers;
 import net.derpy.mod.item.client.AnakinsLightsaberRenderer;
+import net.derpy.mod.util.LightingHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtByte;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import software.bernie.geckolib.animatable.GeoItem;
@@ -43,8 +36,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static bond.thematic.api.network.AnimationPacketHandler.applyModifiers;
 
 public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
     private static final RawAnimation IGNITE_ANIM = RawAnimation.begin().then("ignite", Animation.LoopType.HOLD_ON_LAST_FRAME);
@@ -146,5 +137,20 @@ public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return false;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        // Glow effect
+        boolean isOn = stack.getOrCreateNbt().getBoolean("LightsaberOn");
+
+        LightingHelper.tick(entity, isOn);
     }
 }
