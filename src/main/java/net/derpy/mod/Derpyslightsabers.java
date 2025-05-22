@@ -1,5 +1,7 @@
 package net.derpy.mod;
 
+import bond.thematic.mod.Thematic;
+import net.derpy.mod.collection.LightsaberCollection;
 import net.derpy.mod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
@@ -26,5 +28,10 @@ public class Derpyslightsabers implements ModInitializer {
 		GeoItem.registerSyncedAnimatable(ModItems.ANAKINS_LIGHTSABER);
 
 		LOGGER.info("Derpy's Lightsabers mod initialized successfully!");
+
+		// Add thematic armor
+		LightsaberCollection lightsaberCollection = new LightsaberCollection();
+		Thematic.addCollection(lightsaberCollection);
+		lightsaberCollection.initServer();
 	}
 }
