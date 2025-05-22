@@ -1,0 +1,51 @@
+{
+  "wip": false,
+  "tier": 1,
+  "abilities": [
+    {
+      "identifier": "throw_saber",
+      "keybind": "key.thematic.ability_0"
+    }
+  ],
+  "attributes": [
+    {
+      "identifier": "pehkui:base",
+      "effect": 0.98
+    }
+  ],
+  "stats": [
+    {
+      "identifier": "thematic:base_generic_attack",
+      "minimum": 5,
+      "maximum": 15
+    },
+    {
+      "identifier": "thematic:base_regen",
+      "minimum": 10,
+      "maximum": 20
+    },
+    {
+      "identifier": "thematic:base_generic_speed",
+      "minimum": 10,
+      "maximum": 20
+    },
+    {
+      "identifier": "thematic:base_utility",
+      "minimum": 5,
+      "maximum": 15
+    },
+    {
+      "identifier": "thematic:base_defense",
+      "minimum": 5,
+      "maximum": 15
+    },
+    {
+      "identifier": "thematic:base_combat",
+      "minimum": 5,
+      "maximum": 15
+    }
+  ],
+  "fighting_type": [
+    "DUELIST"
+  ]
+}
