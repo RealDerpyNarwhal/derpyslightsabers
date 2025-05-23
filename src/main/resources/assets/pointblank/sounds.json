@@ -1,0 +1,10 @@
+{
+    "westar34fire": {
+        "sounds": [
+            {
+                "name": "pointblank:westar34fire",
+                "stream": true
+            }
+        ]
+    }
+}

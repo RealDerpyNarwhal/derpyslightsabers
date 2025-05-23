@@ -3,7 +3,8 @@
 	"package": "net.derpy.mod.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"GunItemMixin",
+		"ExtensionRegistryMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
