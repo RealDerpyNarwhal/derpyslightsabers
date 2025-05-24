@@ -5,6 +5,10 @@
     {
       "identifier": "throw_saber",
       "keybind": "key.thematic.ability_0"
+    },
+    {
+      "identifier": "force_choke",
+      "keybind": "key.thematic.ability_2"
     }
   ],
   "attributes": [

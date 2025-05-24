@@ -5,11 +5,10 @@ import bond.thematic.api.registries.armors.Collection;
 import bond.thematic.api.registries.armors.ability.AbilityRegistry;
 import bond.thematic.api.registries.armors.armor.ArmorRegistry;
 import bond.thematic.api.registries.armors.armor.ThematicArmor;
-import bond.thematic.api.registries.item.ItemRegistry;
 import net.derpy.mod.Derpyslightsabers;
+import net.derpy.mod.collection.ability.AbilityForceChoke;
 import net.derpy.mod.collection.ability.AbilityThrowSaber;
 import net.derpy.mod.collection.armor.DerpyArmor;
-import net.minecraft.registry.Registries;
 
 public class LightsaberCollection extends Collection {
     private static boolean registered = false;
@@ -26,6 +25,7 @@ public class LightsaberCollection extends Collection {
             ThematicArmor derpyArmor = new DerpyArmor(this, "derpy_armor");
             ArmorRegistry.registerArmor(derpyArmor);
             AbilityRegistry.registerAbility(new AbilityThrowSaber("throw_saber"));
+            AbilityRegistry.registerAbility(new AbilityForceChoke("force_choke"));
         }
         registered = true;
 
