@@ -1,0 +1,14 @@
+{
+	"type": "muzzle_flash",
+	"name": "blaster_flash_red",
+	"texture": "textures/effect/blaster_flash_red.png",
+        "blendMode": "ADDITIVE",
+	"width": 0.9,
+	"duration" : 50,
+        "sprites": {
+	  "type": "random",
+	  "rows": 1,
+	  "columns": 9,
+	  "fps": 60
+	}
+}
