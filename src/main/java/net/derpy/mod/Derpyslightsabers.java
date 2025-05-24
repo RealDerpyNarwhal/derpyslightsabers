@@ -2,6 +2,7 @@ package net.derpy.mod;
 
 import bond.thematic.mod.Thematic;
 import net.derpy.mod.collection.LightsaberCollection;
+import net.derpy.mod.item.ModItemGroups;
 import net.derpy.mod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 
@@ -23,6 +24,8 @@ public class Derpyslightsabers implements ModInitializer {
 		// Step 2: Register all mod items
 		ModItems.registerModItems();
 
+		//for mod item groups
+		ModItemGroups.registerItemGroups();
 		// Step 3: Register synced animatable for GeckoLib to sync animations
 		// Make sure ANAKINSLIGHTSABER is actually an instance of a GeoAnimatable item (which it is)
 		GeoItem.registerSyncedAnimatable(ModItems.ANAKINS_LIGHTSABER);

@@ -1,4 +1,15 @@
 {
+  //weapon lang
   "item.derpyslightsabers.anakins_lightsaber": "Anakin's Lightsaber",
-  "item.pointblank.westar34": "Westar-34"
+  "item.pointblank.westar34": "Westar-34",
+  "itemgroup.weapons": "Derpy's Weapons",
+
+  //armor lang
+  "item.thematic.derpy_armor":"Test Armor",
+  "thematic.armor_collection.derpyslightsabers": "Test Collection",
+
+  //ability lang
+  "throw_saber": "Throw Saber",
+  "force_choke": "Force Choke",
+  "force_grab": "Force Grab"
 }

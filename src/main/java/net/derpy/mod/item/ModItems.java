@@ -16,9 +16,6 @@ public class ModItems {
     public static final AnakinsLightsaber ANAKINS_LIGHTSABER = registerItem(
             "anakins_lightsaber", new AnakinsLightsaber(new FabricItemSettings()));
 
-    private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
-        entries.add(ANAKINS_LIGHTSABER);
-    }
 
     private static <T extends Item> T registerItem(String name, T item) {
         return Registry.register(Registries.ITEM, new Identifier(Derpyslightsabers.MOD_ID, name), item);
@@ -26,6 +23,5 @@ public class ModItems {
 
     public static void registerModItems() {
         Derpyslightsabers.LOGGER.info("Registering Mod Items for " + Derpyslightsabers.MOD_ID);
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientItemGroup);
     }
 }

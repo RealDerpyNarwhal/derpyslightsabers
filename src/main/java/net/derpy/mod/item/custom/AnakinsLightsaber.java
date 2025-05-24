@@ -116,6 +116,7 @@ public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
         return cache;
     }
 
+
     @Override
     public boolean attackUse(World world, PlayerEntity playerEntity, Hand hand) {
         if (world.isClient) {
