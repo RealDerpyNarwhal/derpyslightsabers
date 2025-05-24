@@ -7,7 +7,7 @@ import bond.thematic.api.registries.armors.armor.ArmorRegistry;
 import bond.thematic.api.registries.armors.armor.ThematicArmor;
 import net.derpy.mod.Derpyslightsabers;
 import net.derpy.mod.collection.ability.AbilityForceChoke;
-import net.derpy.mod.collection.ability.AbilityForceGrab;
+import net.derpy.mod.collection.ability.AbilityForcePush;
 import net.derpy.mod.collection.ability.AbilityThrowSaber;
 import net.derpy.mod.collection.armor.DerpyArmor;
 
@@ -27,7 +27,7 @@ public class LightsaberCollection extends Collection {
             ArmorRegistry.registerArmor(derpyArmor);
             AbilityRegistry.registerAbility(new AbilityThrowSaber("throw_saber"));
             AbilityRegistry.registerAbility(new AbilityForceChoke("force_choke"));
-            AbilityRegistry.registerAbility(new AbilityForceGrab("force_grab"));
+            AbilityRegistry.registerAbility(new AbilityForcePush("force_push"));
         }
         registered = true;
 
