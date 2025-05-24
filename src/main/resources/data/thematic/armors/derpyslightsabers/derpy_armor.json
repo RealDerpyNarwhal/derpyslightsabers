@@ -7,6 +7,10 @@
       "keybind": "key.thematic.ability_0"
     },
     {
+      "identifier": "force_grab",
+      "keybind": "key.thematic.ability_1"
+    },
+    {
       "identifier": "force_choke",
       "keybind": "key.thematic.ability_2"
     }
