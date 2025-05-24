@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Box;
 import net.minecraft.entity.EquipmentSlot;
 
 import java.util.HashMap;
@@ -16,8 +15,10 @@ import java.util.UUID;
 
 public class AbilityForceChoke extends ThematicAbility {
 
-    // Map to keep track of damage cooldown per player UUID
+    // Track damage cooldown per player UUID (ticks until next damage)
     private final Map<UUID, Integer> damageCooldowns = new HashMap<>();
+    // Track ability active duration per player UUID (ticks remaining)
+    private final Map<UUID, Integer> activeDurations = new HashMap<>();
 
     public AbilityForceChoke(String abilityId) {
         super(abilityId, AbilityType.PRESS);
@@ -34,27 +35,47 @@ public class AbilityForceChoke extends ThematicAbility {
             if (armorStack.isEmpty() || !(armorStack.getItem() instanceof DerpyArmor)) return;
 
             // Only run effect if ability is active on player
-            if (!isActive(player, this.getId())) return;
+            if (!isActive(player, this.getId())) {
+                // Ability inactive: clear durations if any and return
+                activeDurations.remove(player.getUuid());
+                damageCooldowns.remove(player.getUuid());
+                return;
+            }
+
+            UUID playerId = player.getUuid();
+
+            // Decrement active duration
+            int remainingDuration = activeDurations.getOrDefault(playerId, 0);
+            if (remainingDuration <= 0) {
+                // Duration ended — deactivate ability and clear cooldowns
+                setActive(player, this.getId(), cooldown(player), false);
+                activeDurations.remove(playerId);
+                damageCooldowns.remove(playerId);
+                return;
+            } else {
+                activeDurations.put(playerId, remainingDuration - 1);
+            }
 
             Entity target = getTarget(player);
             if (!(target instanceof LivingEntity livingTarget)) {
                 // Target lost or invalid, deactivate ability
                 setActive(player, this.getId(), cooldown(player), false);
+                activeDurations.remove(playerId);
+                damageCooldowns.remove(playerId);
                 return;
             }
 
-            // Damage cooldown logic: damage only every 10 ticks (0.5 sec)
-            UUID playerId = player.getUuid();
-            int cooldown = damageCooldowns.getOrDefault(playerId, 0);
-
-            if (cooldown <= 0) {
-                livingTarget.damage(livingTarget.getDamageSources().mobAttack(player), (float) this.damage(player));
-                damageCooldowns.put(playerId, 10);
+            // Damage cooldown logic: damage every 40 ticks (2 seconds)
+            int damageCd = damageCooldowns.getOrDefault(playerId, 0);
+            if (damageCd <= 0) {
+                // Damage 1 heart = 2.0f damage (total 10 damage over 10 hits)
+                livingTarget.damage(livingTarget.getDamageSources().mobAttack(player), 1.0f);
+                damageCooldowns.put(playerId, 40);
             } else {
-                damageCooldowns.put(playerId, cooldown - 1);
+                damageCooldowns.put(playerId, damageCd - 1);
             }
 
-            // Calculate pull position based on player look direction
+            // Calculate pull direction based on player look direction
             float headYaw = player.getYaw();
             float pitch = player.getPitch();
             double yawRad = Math.toRadians(headYaw);
@@ -66,42 +87,23 @@ public class AbilityForceChoke extends ThematicAbility {
             double dirY = -Math.sin(pitchRad);
             double dirZ = Math.cos(yawRad) * Math.cos(pitchRad);
 
-            double targetX = player.getX() + dirX * distance;
-            double targetY = player.getY() + player.getEyeHeight(livingTarget.getPose()) + dirY * distance;
-            double targetZ = player.getZ() + dirZ * distance;
+            double desiredX = player.getX() + dirX * distance;
+            double desiredY = player.getY() + player.getEyeHeight(livingTarget.getPose()) + dirY * distance;
+            double desiredZ = player.getZ() + dirZ * distance;
 
-            double width = livingTarget.getWidth();
-            double height = livingTarget.getHeight();
+            // Smooth pull velocity factor
+            double pullSpeed = 0.3;
 
-            Box targetBox = new Box(
-                    targetX - width / 2, targetY, targetZ - width / 2,
-                    targetX + width / 2, targetY + height, targetZ + width / 2
-            );
+            // Compute velocity vector towards desired position
+            double velX = (desiredX - livingTarget.getX()) * pullSpeed;
+            double velY = (desiredY - livingTarget.getY()) * pullSpeed;
+            double velZ = (desiredZ - livingTarget.getZ()) * pullSpeed;
 
-            boolean wouldSuffocate = livingTarget.getWorld().getBlockCollisions(livingTarget, targetBox).iterator().hasNext();
+            // Apply velocity to gently pull target
+            livingTarget.setVelocity(velX, velY, velZ);
 
-            if (!wouldSuffocate) {
-                livingTarget.setPosition(targetX, targetY, targetZ);
-            } else {
-                for (int i = 1; i <= 3; i++) {
-                    double safeDistance = distance - i;
-                    if (safeDistance < 2) break;
-
-                    double safeX = player.getX() + dirX * safeDistance;
-                    double safeY = player.getY() + player.getEyeHeight(livingTarget.getPose()) + dirY * safeDistance;
-                    double safeZ = player.getZ() + dirZ * safeDistance;
-
-                    Box safeBox = new Box(
-                            safeX - width / 2, safeY, safeZ - width / 2,
-                            safeX + width / 2, safeY + height, safeZ + width / 2
-                    );
-
-                    if (!livingTarget.getWorld().getBlockCollisions(livingTarget, safeBox).iterator().hasNext()) {
-                        livingTarget.setPosition(safeX, safeY, safeZ);
-                        break;
-                    }
-                }
-            }
+            // Prevent fall damage by resetting fallDistance
+            livingTarget.fallDistance = 0f;
         });
     }
 
@@ -115,6 +117,9 @@ public class AbilityForceChoke extends ThematicAbility {
         Entity target = this.getTarget(playerEntity);
         if (!(target instanceof LivingEntity)) return;
 
+        // Activate ability for 20 seconds (400 ticks)
+        activeDurations.put(playerEntity.getUuid(), 400);
+        damageCooldowns.put(playerEntity.getUuid(), 0); // reset damage cooldown
         setActive(playerEntity, this.getId(), this.getCooldown(playerEntity), true);
     }
 
@@ -127,11 +132,15 @@ public class AbilityForceChoke extends ThematicAbility {
         Entity target = getTarget(playerEntity);
         if (!(target instanceof LivingEntity livingTarget)) {
             setActive(playerEntity, this.getId(), cooldown(playerEntity), false);
+            activeDurations.remove(playerEntity.getUuid());
+            damageCooldowns.remove(playerEntity.getUuid());
             return;
         }
 
         if (livingTarget.isDead()) {
             setActive(playerEntity, this.getId(), cooldown(playerEntity), false);
+            activeDurations.remove(playerEntity.getUuid());
+            damageCooldowns.remove(playerEntity.getUuid());
             return;
         }
 
