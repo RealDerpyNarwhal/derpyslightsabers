@@ -47,7 +47,7 @@ public class AstromechEntity extends TameableEntity implements GeoEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SitGoal(this));
-        this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
+        this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0, 5.0F, 1.5F, true)); // was 1.25
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(4, new LookAroundGoal(this));
     }

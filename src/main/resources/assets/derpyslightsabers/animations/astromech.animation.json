@@ -1,54 +1,6 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"walk": {
-			"loop": "hold_on_last_frame",
-			"animation_length": 1.125,
-			"bones": {
-				"frontleg": {
-					"position": {
-						"vector": [0, -11, -12]
-					}
-				},
-				"body": {
-					"rotation": {
-						"vector": [-20, 0, 0]
-					},
-					"position": {
-						"vector": [0, 0, 1]
-					}
-				},
-				"frontleg2": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"1.125": {
-							"vector": [0, 0, -12.5]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.4167": {
-							"vector": [-0.5, -1, 0]
-						},
-						"1.125": {
-							"vector": [-1, -1, 0]
-						}
-					}
-				},
-				"head": {
-					"rotation": {
-						"vector": [0, 20, 0]
-					},
-					"position": {
-						"vector": [0, -0.6, 5.4]
-					}
-				}
-			}
-		},
 		"idle": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 1.1667,
@@ -118,6 +70,32 @@
 				"astromech": {
 					"position": {
 						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"walk": {
+			"loop": true,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": [-20, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 1]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 20, 0]
+					},
+					"position": {
+						"vector": [0, -0.3, 2.8]
+					}
+				},
+				"frontleg": {
+					"position": {
+						"vector": [0, -4.4, -3]
 					}
 				}
 			}
