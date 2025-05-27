@@ -2,7 +2,7 @@ package net.derpy.mod;
 
 import bond.thematic.mod.Thematic;
 import net.derpy.mod.collection.LightsaberCollection;
-import net.derpy.mod.entity.ModEntities;         // <-- Import ModEntities
+import net.derpy.mod.entity.ModEntities;
 import net.derpy.mod.item.ModItemGroups;
 import net.derpy.mod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -25,21 +25,20 @@ public class Derpyslightsabers implements ModInitializer {
 		// Step 2: Register all mod items
 		ModItems.registerModItems();
 
-		// Register all mod entities (including attributes)
-		ModEntities.registerModEntities();      // <-- Add this call here!
+		// Step 3: Register all mod entities and their attributes
+		ModEntities.registerModEntities();  // ✅ Attribute registration included here
 
-		// For mod item groups
+		// Step 4: Register item groups
 		ModItemGroups.registerItemGroups();
 
-		// Step 3: Register synced animatable for GeckoLib to sync animations
-		// Make sure ANAKINSLIGHTSABER is actually an instance of a GeoAnimatable item (which it is)
+		// Step 5: Register synced animatable items
 		GeoItem.registerSyncedAnimatable(ModItems.ANAKINS_LIGHTSABER);
 
-		LOGGER.info("Derpy's Lightsabers mod initialized successfully!");
-
-		// Add thematic armor
+		// Step 6: Initialize Thematic content
 		LightsaberCollection lightsaberCollection = new LightsaberCollection();
 		Thematic.addCollection(lightsaberCollection);
 		lightsaberCollection.initServer();
+
+		LOGGER.info("Derpy's Lightsabers mod initialized successfully!");
 	}
 }
