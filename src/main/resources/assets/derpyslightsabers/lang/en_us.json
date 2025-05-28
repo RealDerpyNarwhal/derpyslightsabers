@@ -12,5 +12,8 @@
   "throw_saber": "Throw Saber",
   "force_choke": "Force Choke",
   "force_push": "Force Push",
-  "force_slam": "Force Slam"
+  "force_slam": "Force Slam",
+
+  //entity lang
+  "entity.derpylightsabers.astromech": "Astromech"
 }
