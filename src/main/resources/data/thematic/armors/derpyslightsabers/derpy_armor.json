@@ -13,6 +13,10 @@
     {
       "identifier": "force_choke",
       "keybind": "key.thematic.ability_2"
+    },
+    {
+      "identifier": "force_slam",
+      "keybind": "key.thematic.ability_3"
     }
   ],
   "attributes": [

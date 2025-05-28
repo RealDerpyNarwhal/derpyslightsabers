@@ -22,7 +22,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.RenderProvider;
@@ -33,16 +32,19 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.RenderUtils;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
     private static final RawAnimation IGNITE_ANIM = RawAnimation.begin().then("ignite", Animation.LoopType.HOLD_ON_LAST_FRAME);
     private static final RawAnimation RETRACT_ANIM = RawAnimation.begin().then("retract", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation BLOCK_ANIM = RawAnimation.begin().then("block", Animation.LoopType.LOOP);
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
+    // Used to toggle between swing_saber and swing_saber_2
+    private static boolean lastSwingWasFirst = false;
 
     public AnakinsLightsaber(Settings settings) {
         super(settings);
@@ -70,10 +72,53 @@ public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
                     System.out.println("[AnakinsLightsaber] Shift + Right Click -> IGNITE");
                 }
                 return TypedActionResult.success(stack, world.isClient());
+            } else {
+                // Not sneaking: start blocking and play block animation
+                triggerAnim(user, id, "controller", "block");
+                user.setCurrentHand(hand);
+                return TypedActionResult.consume(stack);
             }
         }
 
         return TypedActionResult.pass(stack);
+    }
+
+    @Override
+    public boolean attackUse(World world, PlayerEntity playerEntity, Hand hand) {
+        if (world.isClient) {
+            AnimationStack animationStack = PlayerAnimationAccess.getPlayerAnimLayer((AbstractClientPlayerEntity) playerEntity);
+
+            if (animationStack != null) {
+                // Alternate between "swing_saber" and "swing_saber_2"
+                String animName = lastSwingWasFirst ? "swing_saber_2" : "swing_saber";
+                lastSwingWasFirst = !lastSwingWasFirst;
+
+                Identifier animationLocation = new Identifier(Derpyslightsabers.MOD_ID, animName);
+                KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(animationLocation);
+
+                if (animation != null) {
+                    KeyframeAnimationPlayer animPlayer = new KeyframeAnimationPlayer(animation);
+                    animationStack.addAnimLayer(5, animPlayer);
+                } else {
+                    System.err.println("[AnakinsLightsaber] Animation not found: " + animName);
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return false;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        // Glow effect
+        boolean isOn = stack.getOrCreateNbt().getBoolean("LightsaberOn");
+        LightingHelper.tick(entity, isOn);
     }
 
     @Override
@@ -82,6 +127,7 @@ public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
                 new AnimationController<>(this, "controller", 0, this::predicate)
                         .triggerableAnim("ignite", IGNITE_ANIM)
                         .triggerableAnim("retract", RETRACT_ANIM)
+                        .triggerableAnim("block", BLOCK_ANIM)
         );
     }
 
@@ -114,44 +160,5 @@ public class AnakinsLightsaber extends Item implements GeoItem, IAttackUse {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-
-    @Override
-    public boolean attackUse(World world, PlayerEntity playerEntity, Hand hand) {
-        if (world.isClient) {
-            // In the future, Thematic will have support to just do:
-            // AnimationManager.triggerAnimation(Derpyslightsabers.MOD_ID, "swing_saber");
-            // but for now we'll do it this way because I forgot I hard-coded in the names
-
-            AnimationStack animationStack = PlayerAnimationAccess.getPlayerAnimLayer((AbstractClientPlayerEntity) playerEntity);
-
-            if (animationStack != null) {
-                // I'd recommend having multiple of these animations and using Math.random to choose random ones
-                // for each swing, that way you can have variation to it
-                // Also make sure the playerEntity.getItemCooldownManager() isn't up before you fire these animations, make sure they're the same length
-                // That way you don't over play the animation at all
-                Identifier animationLocation = Objects.requireNonNull(Identifier.of(Derpyslightsabers.MOD_ID, "swing_saber"));
-                KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(animationLocation);
-                KeyframeAnimationPlayer player = new KeyframeAnimationPlayer(Objects.requireNonNull(animation));
-                animationStack.addAnimLayer(5, player);
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        return false;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
-
-        // Glow effect
-        boolean isOn = stack.getOrCreateNbt().getBoolean("LightsaberOn");
-
-        LightingHelper.tick(entity, isOn);
     }
 }
