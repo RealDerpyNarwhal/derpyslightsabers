@@ -6,5 +6,13 @@
                 "stream": true
             }
         ]
+    },
+    "breload": {
+        "sounds": [
+            {
+                "name": "pointblank:breload",
+                "stream": true
+            }
+        ]
     }
 }
