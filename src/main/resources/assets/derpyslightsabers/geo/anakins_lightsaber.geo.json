@@ -3,12 +3,12 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.unknown",
+				"identifier": "geometry.anakins_lightsaber",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 2,
-				"visible_bounds_height": 3.5,
-				"visible_bounds_offset": [0, 1.25, 0]
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 17,
+				"visible_bounds_offset": [0, 1.5, 0]
 			},
 			"bones": [
 				{
@@ -2923,32 +2923,9 @@
 				{
 					"name": "blade",
 					"parent": "base",
-					"pivot": [0.08254, 9.22132, -0.00756],
+					"pivot": [0.00754, 11.27132, 0.01744],
 					"cubes": [
-						{
-							"origin": [-0.21746, 9.22132, -0.20756],
-							"size": [0.45, 0.3, 0.45],
-							"uv": {
-								"north": {"uv": [123, 0], "uv_size": [5, 39]},
-								"east": {"uv": [123, 0], "uv_size": [5, 39]},
-								"south": {"uv": [123, 0], "uv_size": [5, 39]},
-								"west": {"uv": [123, 0], "uv_size": [5, 39]},
-								"up": {"uv": [128, 39], "uv_size": [-5, -39]},
-								"down": {"uv": [128, 39], "uv_size": [-5, -39]}
-							}
-						},
-						{
-							"origin": [-0.16746, 9.22132, -0.15756],
-							"size": [0.35, 0.2, 0.35],
-							"uv": {
-								"north": {"uv": [113, 0], "uv_size": [5, 22]},
-								"east": {"uv": [113, 0], "uv_size": [5, 22]},
-								"south": {"uv": [113, 0], "uv_size": [5, 22]},
-								"west": {"uv": [113, 0], "uv_size": [5, 22]},
-								"up": {"uv": [118, 22], "uv_size": [-5, -22]},
-								"down": {"uv": [118, 22], "uv_size": [-5, -22]}
-							}
-						}
+						{"origin": [-0.15246, 7.52132, -0.15756], "size": [0.31, 2.1, 0.35], "uv": [123, 19]}
 					]
 				}
 			]

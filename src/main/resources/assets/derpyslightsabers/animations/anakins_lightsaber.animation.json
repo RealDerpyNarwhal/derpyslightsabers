@@ -6,12 +6,44 @@
 			"animation_length": 0.5,
 			"bones": {
 				"blade": {
-					"scale": {
+					"position": {
 						"0.0": {
-							"vector": [1, 1, 1]
+							"vector": [0, 0, 0]
 						},
 						"0.5": {
-							"vector": [1, 90, 1]
+							"vector": [0, 32, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 1.1, 1]
+						},
+						"0.5": {
+							"vector": [1, 9, 1]
+						}
+					}
+				}
+			}
+		},
+		"retract": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"bones": {
+				"blade": {
+					"position": {
+						"0.0": {
+							"vector": [0, 32, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 9, 1]
+						},
+						"0.5": {
+							"vector": [1, 1.1, 1]
 						}
 					}
 				}

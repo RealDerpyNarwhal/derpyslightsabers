@@ -15,5 +15,6 @@
   "force_slam": "Force Slam",
 
   //entity lang
-  "entity.derpylightsabers.astromech": "Astromech"
+  "entity.derpylightsabers.astromech": "Astromech",
+  "entity.derpylightsabers.c3po": "C3PO"
 }

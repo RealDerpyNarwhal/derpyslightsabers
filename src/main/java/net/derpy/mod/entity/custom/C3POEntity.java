@@ -29,25 +29,25 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class AstromechEntity extends TameableEntity implements GeoEntity {
+public class C3POEntity extends TameableEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public AstromechEntity(EntityType<? extends TameableEntity> type, World world) {
+    public C3POEntity(EntityType<? extends TameableEntity> type, World world) {
         super(type, world);
     }
 
-    public static DefaultAttributeContainer.Builder createAstromechAttributes() {
+    public static DefaultAttributeContainer.Builder createC3POAttributes() {
         return TameableEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 16.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.20)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0);
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SitGoal(this));
-        this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0, 5.0F, 1.5F, true)); // was 1.25
+        this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0, 5.0F, 1.5F, true));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(4, new LookAroundGoal(this));
     }
@@ -89,7 +89,7 @@ public class AstromechEntity extends TameableEntity implements GeoEntity {
                 this.setSitting(!this.isSitting());
                 return ActionResult.success(this.getWorld().isClient());
             }
-        } else if (stack.getItem() == Items.IRON_INGOT) {
+        } else if (stack.getItem() == Items.GOLD_INGOT) {
             if (!player.getAbilities().creativeMode) stack.decrement(1);
 
             if (!this.getWorld().isClient()) {
@@ -108,15 +108,15 @@ public class AstromechEntity extends TameableEntity implements GeoEntity {
         return super.interactMob(player, hand);
     }
 
-    // === Miscellaneous ===
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
                                  EntityData entityData, NbtCompound entityTag) {
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
+
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return EntityDimensions.fixed(0.6f, 1.2f);
+        return EntityDimensions.fixed(0.6f, 1.8f);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class AstromechEntity extends TameableEntity implements GeoEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return super.getAmbientSound(); // Replace with your custom astromech beep sound
+        return super.getAmbientSound(); // Replace with C-3PO lines
     }
 
     @Override
