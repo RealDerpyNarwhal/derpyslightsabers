@@ -12,7 +12,7 @@ public class DerpySoundRegistry {
     private static RegistryService<SoundEvent> soundRegistry = Platform.getInstance().getSoundRegistry();
     private static Map<String, Supplier<SoundEvent>> registeredSoundEvents = new HashMap();
     public static Supplier<SoundEvent> WESTAR34FIRE = register("westar34fire");
-    public static Supplier<SoundEvent> BRELOAD = register("breload");
+    public static Supplier<SoundEvent> WESTARSTEAM = register("westarsteam");
     public static Supplier<SoundEvent> M1911_SILENCED = register("m1911_silenced");
     public DerpySoundRegistry() {
     }

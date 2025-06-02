@@ -7,10 +7,10 @@
             }
         ]
     },
-    "breload": {
+    "westarsteam": {
         "sounds": [
             {
-                "name": "pointblank:breload",
+                "name": "pointblank:westarsteam",
                 "stream": true
             }
         ]

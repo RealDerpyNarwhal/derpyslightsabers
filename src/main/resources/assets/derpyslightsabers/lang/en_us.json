@@ -1,8 +1,11 @@
 {
   //weapon lang
   "item.derpyslightsabers.anakins_lightsaber": "Anakin's Lightsaber",
-  "item.pointblank.westar34": "Westar-34",
   "itemgroup.weapons": "Derpy's Weapons",
+
+  //gun lang
+  "item.pointblank.westar34": "Westar-34",
+  "item.pointblank.ee3carbine": "EE3-Carbine",
 
   //armor lang
   "item.thematic.derpy_armor":"Test Armor",
