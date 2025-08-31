@@ -14,5 +14,13 @@
                 "stream": true
             }
         ]
+    },
+    "dc15sfire": {
+        "sounds": [
+            {
+                "name": "pointblank:dc15sfire",
+                "stream": true
+            }
+        ]
     }
 }
