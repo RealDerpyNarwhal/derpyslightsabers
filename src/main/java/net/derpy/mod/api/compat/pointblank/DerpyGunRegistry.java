@@ -12,7 +12,6 @@ import com.vicmatskiv.pointblank.registry.AmmoRegistry;
 import com.vicmatskiv.pointblank.registry.ItemRegistry;
 import com.vicmatskiv.pointblank.util.Conditions;
 import com.vicmatskiv.pointblank.util.TimeUnit;
-import net.derpy.mod.Derpyslightsabers;
 import net.minecraft.item.ItemConvertible;
 import java.util.List;
 import java.util.function.Consumer;
@@ -36,14 +35,16 @@ public final class DerpyGunRegistry {
     public static void init() {}
 
     static {
-        int infinite = 0x7fffffff;
+        int WESTAR34_CAPACITY = 6;
+        int EE3CARBINE_CAPACITY = 50;
+        int DC15S_CAPACITY = 160;
+        int PEACEMAKERDEAGLE_CAPACITY = 8;
 
-        // WESTAR34
         WESTAR34 = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("westar34")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(infinite)
+                        .withMaxAmmoCapacity(WESTAR34_CAPACITY)
                         .withDamage(15.0F)
                         .withRpm(89)
                         .withFireModes(FireMode.SINGLE)
@@ -81,15 +82,13 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
                                         new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
-                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
-        );
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3)))));
 
-        // EE3 CARBINE
         EE3CARBINE = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("ee3carbine")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(infinite)
+                        .withMaxAmmoCapacity(EE3CARBINE_CAPACITY)
                         .withDamage(15.0F)
                         .withRpm(500)
                         .withFireModes(FireMode.BURST, FireMode.SINGLE)
@@ -128,15 +127,13 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
                                         new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
-                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
-        );
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3)))));
 
-        // DC15S
         DC15S = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("dc15s")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(infinite)
+                        .withMaxAmmoCapacity(DC15S_CAPACITY)
                         .withDamage(18.0F)
                         .withRpm(300)
                         .withFireModes(FireMode.SINGLE)
@@ -154,15 +151,13 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder()
                                 .withZoom(0.3))
                         .withCompatibleAttachmentGroup("hg_sights")
-                        .withCompatibleAttachmentGroup("smg_muzzle")
-        );
+                        .withCompatibleAttachmentGroup("smg_muzzle"));
 
-        // PeacemakerDeagle
         PEACEMAKERDEAGLE = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("peacemakerdeagle")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(infinite)
+                        .withMaxAmmoCapacity(PEACEMAKERDEAGLE_CAPACITY)
                         .withDamage(22.0F)
                         .withRpm(120)
                         .withFireModes(FireMode.SINGLE)
@@ -180,7 +175,6 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder()
                                 .withZoom(0.25))
                         .withCompatibleAttachmentGroup("hg_sights")
-                        .withCompatibleAttachmentGroup("smg_muzzle")
-        );
+                        .withCompatibleAttachmentGroup("smg_muzzle"));
     }
 }

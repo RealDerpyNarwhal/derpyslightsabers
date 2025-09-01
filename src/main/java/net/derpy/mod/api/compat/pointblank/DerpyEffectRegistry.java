@@ -80,7 +80,6 @@ public class DerpyEffectRegistry {
                     .withFaceWidthProvider(new Interpolators.ConstantFloatProvider(0.1F))
     );
 
-    // PeacemakerDeagle yellow effects
     public static Supplier<EffectBuilder<? extends EffectBuilder<?, ?>, ?>> BLASTER_FLASH_YELLOW = register("blaster_flash_yellow", () ->
             new MuzzleFlashEffect.Builder()
                     .withName("blaster_flash_yellow")

@@ -36,7 +36,6 @@ public class DerpySoundRegistry {
     }
 
     public static void init() {
-        // Force-load all sounds to ensure they exist client-side
         for (Supplier<SoundEvent> soundSupplier : registeredSoundEvents.values()) {
             soundSupplier.get();
         }
