@@ -150,6 +150,6 @@ public class DerpyEffectRegistry {
     }
 
     private static List<Supplier<EffectBuilder<? extends EffectBuilder<?, ?>, ?>>> getEntityEffects(Entity entity, Map<Class<? extends Entity>, List<Supplier<EffectBuilder<? extends EffectBuilder<?, ?>, ?>>>> effects) {
-        return Collections.emptyList(); // simplified, gore disabled for now
+        return Collections.emptyList();
     }
 }
