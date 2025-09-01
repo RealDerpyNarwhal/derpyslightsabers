@@ -1,6 +1,7 @@
 package net.derpy.mod.item;
 
 import net.derpy.mod.Derpyslightsabers;
+import net.derpy.mod.api.compat.pointblank.DerpyGunRegistry;
 import net.derpy.mod.item.custom.AnakinsLightsaber;
 import net.derpy.mod.item.custom.LukesLightsaber;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -11,6 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItems {
 
+    // Lightsabers
     public static final AnakinsLightsaber ANAKINS_LIGHTSABER = registerItem(
             "anakins_lightsaber", new AnakinsLightsaber(new FabricItemSettings()));
 

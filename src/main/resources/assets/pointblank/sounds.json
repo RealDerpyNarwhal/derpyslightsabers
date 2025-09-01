@@ -3,7 +3,7 @@
         "sounds": [
             {
                 "name": "pointblank:westar34fire",
-                "stream": true
+                "stream": false
             }
         ]
     },
@@ -11,7 +11,7 @@
         "sounds": [
             {
                 "name": "pointblank:westarsteam",
-                "stream": true
+                "stream": false
             }
         ]
     },
@@ -19,7 +19,31 @@
         "sounds": [
             {
                 "name": "pointblank:dc15sfire",
-                "stream": true
+                "stream": false
+            }
+        ]
+    },
+    "m1911_silenced": {
+        "sounds": [
+            {
+                "name": "pointblank:m1911_silenced",
+                "stream": false
+            }
+        ]
+    },
+    "peacemakerdeagle_fire": {
+        "sounds": [
+            {
+                "name": "pointblank:peacemakerdeagle_fire",
+                "stream": false
+            }
+        ]
+    },
+    "peacemakerdeagle_reload": {
+        "sounds": [
+            {
+                "name": "pointblank:peacemakerdeagle_reload",
+                "stream": false
             }
         ]
     }

@@ -9,24 +9,20 @@ import com.vicmatskiv.pointblank.item.GunItem;
 import com.vicmatskiv.pointblank.item.GunItem.FirePhase;
 import com.vicmatskiv.pointblank.item.GunItem.ReloadPhase;
 import com.vicmatskiv.pointblank.registry.AmmoRegistry;
-import com.vicmatskiv.pointblank.registry.EffectRegistry;
 import com.vicmatskiv.pointblank.registry.ItemRegistry;
-import com.vicmatskiv.pointblank.registry.SoundRegistry;
 import com.vicmatskiv.pointblank.util.Conditions;
 import com.vicmatskiv.pointblank.util.TimeUnit;
 import net.derpy.mod.Derpyslightsabers;
 import net.minecraft.item.ItemConvertible;
-
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static net.minecraft.entity.effect.StatusEffectInstance.INFINITE;
 
 public final class DerpyGunRegistry {
     public static final Supplier<GunItem> WESTAR34;
     public static final Supplier<GunItem> EE3CARBINE;
     public static final Supplier<GunItem> DC15S;
+    public static final Supplier<GunItem> PEACEMAKERDEAGLE;
 
     public DerpyGunRegistry() {}
 
@@ -34,6 +30,7 @@ public final class DerpyGunRegistry {
         entries.accept(WESTAR34.get());
         entries.accept(EE3CARBINE.get());
         entries.accept(DC15S.get());
+        entries.accept(PEACEMAKERDEAGLE.get());
     }
 
     public static void init() {}
@@ -41,6 +38,7 @@ public final class DerpyGunRegistry {
     static {
         int infinite = 0x7fffffff;
 
+        // WESTAR34
         WESTAR34 = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("westar34")
@@ -86,6 +84,7 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
         );
 
+        // EE3 CARBINE
         EE3CARBINE = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("ee3carbine")
@@ -131,12 +130,14 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
                                         new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
         );
+
+        // DC15S
         DC15S = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("dc15s")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
                         .withMaxAmmoCapacity(infinite)
-                        .withDamage(18.0F) // example damage
+                        .withDamage(18.0F)
                         .withRpm(300)
                         .withFireModes(FireMode.SINGLE)
                         .withFireSound(DerpySoundRegistry.DC15S_FIRE)
@@ -152,6 +153,32 @@ public final class DerpyGunRegistry {
                                 .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_BLUE))
                         .withFeature(new AimingFeature.Builder()
                                 .withZoom(0.3))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+        );
+
+        // PeacemakerDeagle
+        PEACEMAKERDEAGLE = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("peacemakerdeagle")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(infinite)
+                        .withDamage(22.0F)
+                        .withRpm(120)
+                        .withFireModes(FireMode.SINGLE)
+                        .withFireSound(DerpySoundRegistry.PEACEMAKERDEAGLE_FIRE)
+                        .withReloadSound(DerpySoundRegistry.PEACEMAKERDEAGLE_RELOAD)
+                        .withDrawCooldownDuration(1000, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(4000, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(1.0)
+                        .withShakeRecoilAmplitude(0.5)
+                        .withShakeRecoilSpeed(3.5)
+                        .withViewRecoilAmplitude(4.0)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
+                        .withFeature(new AimingFeature.Builder()
+                                .withZoom(0.25))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
         );
