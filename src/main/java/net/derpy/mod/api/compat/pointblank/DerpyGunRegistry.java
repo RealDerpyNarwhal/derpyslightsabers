@@ -12,6 +12,7 @@ import com.vicmatskiv.pointblank.registry.AmmoRegistry;
 import com.vicmatskiv.pointblank.registry.ItemRegistry;
 import com.vicmatskiv.pointblank.util.Conditions;
 import com.vicmatskiv.pointblank.util.TimeUnit;
+import net.derpy.mod.Derpyslightsabers;
 import net.minecraft.item.ItemConvertible;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,16 +36,11 @@ public final class DerpyGunRegistry {
     public static void init() {}
 
     static {
-        int WESTAR34_CAPACITY = 6;
-        int EE3CARBINE_CAPACITY = 50;
-        int DC15S_CAPACITY = 160;
-        int PEACEMAKERDEAGLE_CAPACITY = 8;
-
         WESTAR34 = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("westar34")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(WESTAR34_CAPACITY)
+                        .withMaxAmmoCapacity(6)
                         .withDamage(15.0F)
                         .withRpm(89)
                         .withFireModes(FireMode.SINGLE)
@@ -65,9 +61,6 @@ public final class DerpyGunRegistry {
                                 .withZoom(0.25))
                         .withFeature(new PartVisibilityFeature.Builder()
                                 .withShownPart("sightmount", Conditions.hasAttachmentGroup("hg_sights")))
-                        .withFeature(new SoundFeature.Builder()
-                                .withCondition(Conditions.hasAttachmentGroup("smg_suppressors"))
-                                .withFireSound(DerpySoundRegistry.M1911_SILENCED, 1.0))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
                         .withCompatibleAttachmentGroup("m1911a1_skins")
@@ -88,7 +81,7 @@ public final class DerpyGunRegistry {
                 new GunItem.Builder()
                         .withName("ee3carbine")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(EE3CARBINE_CAPACITY)
+                        .withMaxAmmoCapacity(50)
                         .withDamage(15.0F)
                         .withRpm(500)
                         .withFireModes(FireMode.BURST, FireMode.SINGLE)
@@ -110,9 +103,6 @@ public final class DerpyGunRegistry {
                                 .withZoom(0.25))
                         .withFeature(new PartVisibilityFeature.Builder()
                                 .withShownPart("sightmount", Conditions.hasAttachmentGroup("hg_sights")))
-                        .withFeature(new SoundFeature.Builder()
-                                .withCondition(Conditions.hasAttachmentGroup("smg_suppressors"))
-                                .withFireSound(DerpySoundRegistry.M1911_SILENCED, 1.0))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
                         .withCompatibleAttachmentGroup("m1911a1_skins")
@@ -133,7 +123,7 @@ public final class DerpyGunRegistry {
                 new GunItem.Builder()
                         .withName("dc15s")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(DC15S_CAPACITY)
+                        .withMaxAmmoCapacity(160)
                         .withDamage(18.0F)
                         .withRpm(300)
                         .withFireModes(FireMode.SINGLE)
@@ -157,7 +147,7 @@ public final class DerpyGunRegistry {
                 new GunItem.Builder()
                         .withName("peacemakerdeagle")
                         .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
-                        .withMaxAmmoCapacity(PEACEMAKERDEAGLE_CAPACITY)
+                        .withMaxAmmoCapacity(8)
                         .withDamage(22.0F)
                         .withRpm(120)
                         .withFireModes(FireMode.SINGLE)

@@ -14,7 +14,6 @@ public class DerpySoundRegistry {
 
     public static Supplier<SoundEvent> WESTAR34FIRE = register("westar34fire");
     public static Supplier<SoundEvent> WESTARSTEAM = register("westarsteam");
-    public static Supplier<SoundEvent> M1911_SILENCED = register("m1911_silenced");
     public static Supplier<SoundEvent> DC15S_FIRE = register("dc15sfire");
     public static Supplier<SoundEvent> PEACEMAKERDEAGLE_FIRE = register("peacemakerdeagle_fire");
     public static Supplier<SoundEvent> PEACEMAKERDEAGLE_RELOAD = register("peacemakerdeagle_reload");

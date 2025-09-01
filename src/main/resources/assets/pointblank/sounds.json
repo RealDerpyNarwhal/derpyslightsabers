@@ -23,14 +23,6 @@
             }
         ]
     },
-    "m1911_silenced": {
-        "sounds": [
-            {
-                "name": "pointblank:m1911_silenced",
-                "stream": false
-            }
-        ]
-    },
     "peacemakerdeagle_fire": {
         "sounds": [
             {
