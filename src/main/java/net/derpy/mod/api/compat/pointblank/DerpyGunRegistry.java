@@ -14,15 +14,18 @@ import com.vicmatskiv.pointblank.util.Conditions;
 import com.vicmatskiv.pointblank.util.TimeUnit;
 import net.derpy.mod.Derpyslightsabers;
 import net.minecraft.item.ItemConvertible;
+
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class DerpyGunRegistry {
+
     public static final Supplier<GunItem> WESTAR34;
     public static final Supplier<GunItem> EE3CARBINE;
     public static final Supplier<GunItem> DC15S;
     public static final Supplier<GunItem> PEACEMAKERDEAGLE;
+    public static final Supplier<GunItem> PENGUINUMBRELLA;
 
     public DerpyGunRegistry() {}
 
@@ -31,6 +34,7 @@ public final class DerpyGunRegistry {
         entries.accept(EE3CARBINE.get());
         entries.accept(DC15S.get());
         entries.accept(PEACEMAKERDEAGLE.get());
+        entries.accept(PENGUINUMBRELLA.get());
     }
 
     public static void init() {}
@@ -75,7 +79,8 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
                                         new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
-                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3)))));
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
+        );
 
         EE3CARBINE = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
@@ -117,7 +122,8 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
                                         new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
-                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3)))));
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
+        );
 
         DC15S = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
@@ -138,10 +144,10 @@ public final class DerpyGunRegistry {
                         .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_BLUE)
                         .withFeature(new MuzzleFlashFeature.Builder()
                                 .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_BLUE))
-                        .withFeature(new AimingFeature.Builder()
-                                .withZoom(0.3))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.3))
                         .withCompatibleAttachmentGroup("hg_sights")
-                        .withCompatibleAttachmentGroup("smg_muzzle"));
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+        );
 
         PEACEMAKERDEAGLE = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
@@ -162,9 +168,41 @@ public final class DerpyGunRegistry {
                         .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
                         .withFeature(new MuzzleFlashFeature.Builder()
                                 .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
-                        .withFeature(new AimingFeature.Builder()
-                                .withZoom(0.25))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.25))
                         .withCompatibleAttachmentGroup("hg_sights")
-                        .withCompatibleAttachmentGroup("smg_muzzle"));
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+        );
+        
+        PENGUINUMBRELLA = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("penguinumbrella")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(60)
+                        .withDamage(12.0F)
+                        .withRpm(180)
+                        .withFireModes(FireMode.AUTOMATIC)
+                        .withFireSound(DerpySoundRegistry.PENGUINUMBRELLA_FIRE)
+                        .withReloadSound(DerpySoundRegistry.PENGUINUMBRELLA_RELOAD)
+                        .withDrawCooldownDuration(800, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(3000, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(0.6)
+                        .withShakeRecoilAmplitude(0.25)
+                        .withShakeRecoilSpeed(2.5)
+                        .withViewRecoilAmplitude(2.0)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.2))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2000L,
+                                new GunItem.ReloadAnimation("animation.model.penguinumbrella_reloadempty", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
+                                        new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2000L,
+                                new GunItem.ReloadAnimation("animation.model.penguinumbrella_reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
+                                        new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
+        );
     }
 }

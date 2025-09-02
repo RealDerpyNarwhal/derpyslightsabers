@@ -38,5 +38,21 @@
                 "stream": false
             }
         ]
+    },
+    "penguinumbrella_fire": {
+        "sounds": [
+            {
+                "name": "pointblank:penguinumbrella_fire",
+                "stream": false
+            }
+        ]
+    },
+    "penguinumbrella_reload": {
+        "sounds": [
+            {
+                "name": "pointblank:penguinumbrella_reload",
+                "stream": false
+            }
+        ]
     }
 }
