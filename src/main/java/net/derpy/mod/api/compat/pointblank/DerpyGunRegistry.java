@@ -171,6 +171,18 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder().withZoom(0.25))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reloadempty", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 300L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 300L, 0.2, 0.3))))
         );
         
         PENGUINUMBRELLA = ItemRegistry.ITEMS.register(
@@ -203,6 +215,19 @@ public final class DerpyGunRegistry {
                                 new GunItem.ReloadAnimation("animation.model.penguinumbrella_reload", List.of(
                                         new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
                                         new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
+
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reloadempty", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
         );
     }
 }
