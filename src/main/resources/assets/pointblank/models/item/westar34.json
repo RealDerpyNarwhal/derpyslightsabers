@@ -1,121 +1,107 @@
 {
-"loader": "forge:separate_transforms",
-  "gui_light": "front",
-  "base": 
-{
-
   "credit": "Made with Blockbench",
   "parent": "builtin/entity",
   "texture_size": [
-    128,
-    128
+    64,
+    64
   ],
   "display": {
     "thirdperson_righthand": {
       "translation": [
-        0.25,
-        -4.75,
-        1
+        0,
+        -6,
+        1.75
       ],
       "scale": [
-        0.25,
-        0.25,
-        0.25
+        0.44,
+        0.34,
+        0.23
       ]
     },
     "thirdperson_lefthand": {
       "translation": [
-        0.25,
-        -4.75,
-        1
+        -12.25,
+        -6,
+        1.75
       ],
       "scale": [
-        0.25,
-        0.25,
-        0.25
+        0.44,
+        0.34,
+        0.23
       ]
     },
     "firstperson_righthand": {
-      "rotation": [
-        0,
-        0,
-        3.5
-      ],
       "translation": [
-        0,
-        -21,
-        -7
+        13.3,
+        -32.5,
+        -25
+      ],
+      "scale": [
+        1.54,
+        1.29,
+        1.29
       ]
     },
     "firstperson_lefthand": {
-      "rotation": [
-        0,
-        0,
-        3.5
-      ],
       "translation": [
-        0,
-        -21,
-        -7
+        -31.4,
+        -32.5,
+        -25
+      ],
+      "scale": [
+        1.54,
+        1.29,
+        1.29
       ]
     },
     "ground": {
       "translation": [
+        5.5,
         0,
-        -1.5,
-        3.5
+        0
       ],
       "scale": [
-        0.3,
-        0.3,
-        0.3
+        0.34,
+        0.34,
+        0.34
       ]
     },
     "gui": {
       "rotation": [
-        44,
-        50,
-        -40
+        90.03999999999996,
+        -56.01999999999998,
+        90
       ],
       "translation": [
-        -0.25,
-        -7.75,
+        0,
+        -9,
         0
       ],
       "scale": [
-        0.37,
-        0.37,
-        0.37
+        0.36,
+        0.36,
+        0.36
       ]
     },
     "fixed": {
       "rotation": [
-        180,
-        -90,
-        180
+        90,
+        56,
+        -90
       ],
       "translation": [
-        -5.5,
-        -10.25,
-        -1
+        0,
+        -9,
+        0
       ],
       "scale": [
-        0.62,
-        0.62,
-        0.62
+        0.36,
+        0.36,
+        0.36
       ]
     }
   },
   "textures": {
     "particle": "item/westar34"
-  }
-},
-  "perspectives": {
-    "gui": {
-      "parent": "item/generated",
-      "textures": {
-        "layer0": "pointblank:item/westar34.icon"
-      }
-    }
   }
 }
