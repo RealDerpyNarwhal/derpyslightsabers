@@ -1,16 +1,8 @@
 {
-    "westar34fire": {
+    "westar34_fire": {
         "sounds": [
             {
-                "name": "pointblank:westar34fire",
-                "stream": false
-            }
-        ]
-    },
-    "westarsteam": {
-        "sounds": [
-            {
-                "name": "pointblank:westarsteam",
+                "name": "derpylightsabers:westar34_fire",
                 "stream": false
             }
         ]
@@ -18,7 +10,7 @@
     "dc15sfire": {
         "sounds": [
             {
-                "name": "pointblank:dc15sfire",
+                "name": "derpyslightsabers:dc15sfire",
                 "stream": false
             }
         ]
@@ -26,7 +18,7 @@
     "peacemakerdeagle_fire": {
         "sounds": [
             {
-                "name": "pointblank:peacemakerdeagle_fire",
+                "name": "derpyslightsabers:peacemakerdeagle_fire",
                 "stream": false
             }
         ]
@@ -34,7 +26,7 @@
     "peacemakerdeagle_reload": {
         "sounds": [
             {
-                "name": "pointblank:peacemakerdeagle_reload",
+                "name": "derpyslightsabers:peacemakerdeagle_reload",
                 "stream": false
             }
         ]
@@ -42,7 +34,7 @@
     "penguinumbrella_fire": {
         "sounds": [
             {
-                "name": "pointblank:penguinumbrella_fire",
+                "name": "derpyslightsabers:penguinumbrella_fire",
                 "stream": false
             }
         ]
@@ -50,7 +42,7 @@
     "penguinumbrella_reload": {
         "sounds": [
             {
-                "name": "pointblank:penguinumbrella_reload",
+                "name": "derpyslightsabers:penguinumbrella_reload",
                 "stream": false
             }
         ]

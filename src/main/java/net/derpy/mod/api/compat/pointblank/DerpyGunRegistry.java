@@ -3,7 +3,6 @@ package net.derpy.mod.api.compat.pointblank;
 import com.vicmatskiv.pointblank.feature.AimingFeature;
 import com.vicmatskiv.pointblank.feature.MuzzleFlashFeature;
 import com.vicmatskiv.pointblank.feature.PartVisibilityFeature;
-import com.vicmatskiv.pointblank.feature.SoundFeature;
 import com.vicmatskiv.pointblank.item.FireMode;
 import com.vicmatskiv.pointblank.item.GunItem;
 import com.vicmatskiv.pointblank.item.GunItem.FirePhase;
@@ -12,7 +11,6 @@ import com.vicmatskiv.pointblank.registry.AmmoRegistry;
 import com.vicmatskiv.pointblank.registry.ItemRegistry;
 import com.vicmatskiv.pointblank.util.Conditions;
 import com.vicmatskiv.pointblank.util.TimeUnit;
-import net.derpy.mod.Derpyslightsabers;
 import net.minecraft.item.ItemConvertible;
 
 import java.util.List;
@@ -48,8 +46,7 @@ public final class DerpyGunRegistry {
                         .withDamage(15.0F)
                         .withRpm(89)
                         .withFireModes(FireMode.SINGLE)
-                        .withFireSound(DerpySoundRegistry.WESTAR34FIRE)
-                        .withReloadSound(DerpySoundRegistry.WESTARSTEAM)
+                        .withFireSound(DerpySoundRegistry.WESTAR34_FIRE)
                         .withDrawCooldownDuration(1200, TimeUnit.MILLISECOND)
                         .withInspectCooldownDuration(4516, TimeUnit.MILLISECOND)
                         .withGunRecoilInitialAmplitude(0.8)
@@ -90,8 +87,7 @@ public final class DerpyGunRegistry {
                         .withDamage(15.0F)
                         .withRpm(500)
                         .withFireModes(FireMode.BURST, FireMode.SINGLE)
-                        .withFireSound(DerpySoundRegistry.WESTAR34FIRE)
-                        .withReloadSound(DerpySoundRegistry.WESTARSTEAM)
+                        .withFireSound(DerpySoundRegistry.WESTAR34_FIRE)
                         .withDrawCooldownDuration(1200, TimeUnit.MILLISECOND)
                         .withInspectCooldownDuration(6267, TimeUnit.MILLISECOND)
                         .withGunRecoilInitialAmplitude(0.8)
@@ -134,7 +130,6 @@ public final class DerpyGunRegistry {
                         .withRpm(300)
                         .withFireModes(FireMode.SINGLE)
                         .withFireSound(DerpySoundRegistry.DC15S_FIRE)
-                        .withReloadSound(DerpySoundRegistry.WESTARSTEAM)
                         .withDrawCooldownDuration(1000, TimeUnit.MILLISECOND)
                         .withInspectCooldownDuration(4000, TimeUnit.MILLISECOND)
                         .withGunRecoilInitialAmplitude(0.9)

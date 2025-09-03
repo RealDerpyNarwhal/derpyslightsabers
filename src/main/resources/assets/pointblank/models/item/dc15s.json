@@ -105,14 +105,14 @@
       }
     },
     "textures": {
-      "particle": "derpyslightsabers:item/dc-15s"
+      "particle": "pointblank:item/dc-15s"
     }
   },
   "perspectives": {
     "gui": {
       "parent": "item/generated",
       "textures": {
-        "layer0": "derpyslightsabers:item/dc15s.icon"
+        "layer0": "pointblank:item/dc15s.icon"
       }
     }
   }
