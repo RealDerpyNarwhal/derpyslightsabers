@@ -1,119 +1,92 @@
 {
-  "loader": "forge:separate_transforms",
-  "gui_light": "front",
-  "base": {
-    "credit": "Made with Blockbench",
-    "parent": "builtin/entity",
-    "texture_size": [
-      64,
-      64
-    ],
-    "display": {
-      "thirdperson_righthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
-      },
-      "thirdperson_lefthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
-      },
-      "firstperson_righthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
-      },
-      "firstperson_lefthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
-      },
-      "ground": {
-        "translation": [
-          0,
-          0,
-          5.75
-        ],
-        "scale": [
-          0.25,
-          0.25,
-          0.25
-        ]
-      },
-      "gui": {
-        "rotation": [
-          90,
-          48.25,
-          -90
-        ],
-        "translation": [
-          2.5,
-          -10.75,
-          0
-        ],
-        "scale": [
-          0.4,
-          0.4,
-          0.4
-        ]
-      },
-      "fixed": {
-        "rotation": [
-          90,
-          48.25,
-          -90
-        ],
-        "translation": [
-          2.5,
-          -10.75,
-          0
-        ],
-        "scale": [
-          0.4,
-          0.4,
-          0.4
-        ]
-      }
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        -4,
+        0.25
+      ],
+      "scale": [
+        0.22,
+        0.22,
+        0.22
+      ]
     },
-    "textures": {
-      "particle": "pointblank:item/dc-15s"
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        -4,
+        0.25
+      ],
+      "scale": [
+        0.22,
+        0.22,
+        0.22
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        -23,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        -23,
+        0
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.22,
+        0.22,
+        0.22
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        -55.25,
+        90
+      ],
+      "translation": [
+        0.5,
+        -5,
+        0
+      ],
+      "scale": [
+        0.22,
+        0.22,
+        0.22
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        60.5,
+        -90
+      ],
+      "translation": [
+        0,
+        -5.75,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "item/generated",
-      "textures": {
-        "layer0": "pointblank:item/dc15s.icon"
-      }
-    }
+  "textures": {
+    "particle": "derpyslightsabers:item/dc-15s"
   }
 }

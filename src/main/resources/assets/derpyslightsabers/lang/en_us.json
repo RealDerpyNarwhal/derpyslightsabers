@@ -1,11 +1,16 @@
 {
   //weapon lang
   "item.derpyslightsabers.anakins_lightsaber": "Anakin's Lightsaber",
+  "item.derpyslightsabers.lukes_lightsaber": "Luke's Lightsaber",
   "itemgroup.weapons": "Derpy's Weapons",
 
   //gun lang
   "item.pointblank.westar34": "Westar-34",
   "item.pointblank.ee3carbine": "EE3-Carbine",
+  "item.pointblank.dc15s": "DC-15s",
+  "item.[pointblank.penguinumbrella]": "Penguin's Umbrella",
+  "item.pointblank.peacemakerdeagle": "Peacemaker's Deagle",
+  "item.pointblank.joker_revolver": "The Joker's Revolver",
 
   //armor lang
   "item.thematic.derpy_armor":"Test Armor",
