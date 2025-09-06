@@ -24,6 +24,7 @@ public final class DerpyGunRegistry {
     public static final Supplier<GunItem> DC15S;
     public static final Supplier<GunItem> PEACEMAKERDEAGLE;
     public static final Supplier<GunItem> PENGUINUMBRELLA;
+    public static final Supplier<GunItem> JOKER_REVOLVER;
 
     public DerpyGunRegistry() {}
 
@@ -33,6 +34,7 @@ public final class DerpyGunRegistry {
         entries.accept(DC15S.get());
         entries.accept(PEACEMAKERDEAGLE.get());
         entries.accept(PENGUINUMBRELLA.get());
+        entries.accept(JOKER_REVOLVER.get());
     }
 
     public static void init() {}
@@ -179,7 +181,7 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
                                         new GunItem.ReloadShakeEffect(730L, 300L, 0.2, 0.3))))
         );
-        
+
         PENGUINUMBRELLA = ItemRegistry.ITEMS.register(
                 new GunItem.Builder()
                         .withName("penguinumbrella")
@@ -223,6 +225,38 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
                                         new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
                                         new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
+        );
+
+        JOKER_REVOLVER = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("joker_revolver")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(6)
+                        .withDamage(25.0F)
+                        .withRpm(80)
+                        .withFireModes(FireMode.SINGLE)
+                        .withFireSound(DerpySoundRegistry.JOKER_REVOLVER_FIRE)
+                        .withReloadSound(DerpySoundRegistry.JOKER_REVOLVER_RELOAD)
+                        .withDrawCooldownDuration(1200, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(4000, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(1.0)
+                        .withShakeRecoilAmplitude(0.5)
+                        .withShakeRecoilSpeed(3.5)
+                        .withViewRecoilAmplitude(4.0)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW) // yellow bullet
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW)) // yellow muzzle
+                        .withFeature(new AimingFeature.Builder().withZoom(0.25))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2500L,
+                                new GunItem.ReloadAnimation("animation.model.joker_revolver_reloadempty", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2500L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(100L, 1200L, 0.3, 0.4))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2500L,
+                                new GunItem.ReloadAnimation("animation.model.joker_revolver_reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2500L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(100L, 1200L, 0.3, 0.4))))
         );
     }
 }
