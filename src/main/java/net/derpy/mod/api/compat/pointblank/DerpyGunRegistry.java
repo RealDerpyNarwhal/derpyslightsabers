@@ -24,8 +24,10 @@ public final class DerpyGunRegistry {
     public static final Supplier<GunItem> DC15S;
     public static final Supplier<GunItem> PEACEMAKERDEAGLE;
     public static final Supplier<GunItem> PENGUINUMBRELLA;
+    public static final Supplier<GunItem> JOKER_REVOLVER;
 
-    public DerpyGunRegistry() {}
+    public DerpyGunRegistry() {
+    }
 
     public static void registerTabItems(Consumer<ItemConvertible> entries) {
         entries.accept(WESTAR34.get());
@@ -33,9 +35,11 @@ public final class DerpyGunRegistry {
         entries.accept(DC15S.get());
         entries.accept(PEACEMAKERDEAGLE.get());
         entries.accept(PENGUINUMBRELLA.get());
+        entries.accept(JOKER_REVOLVER.get());
     }
 
-    public static void init() {}
+    public static void init() {
+    }
 
     static {
         WESTAR34 = ItemRegistry.ITEMS.register(
@@ -198,6 +202,31 @@ public final class DerpyGunRegistry {
                                 new GunItem.ReloadAnimation("animation.model.penguinumbrella_reload", List.of(
                                         new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
                                         new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
+
+        );
+
+        JOKER_REVOLVER = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("joker_revolver")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(6)
+                        .withDamage(20.0F)
+                        .withRpm(100)
+                        .withFireModes(FireMode.SINGLE)
+                        .withFireSound(DerpySoundRegistry.JOKER_REVOLVER_FIRE)
+                        .withReloadSound(DerpySoundRegistry.JOKER_REVOLVER_RELOAD)
+                        .withDrawCooldownDuration(900, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(3500, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(1.1)
+                        .withShakeRecoilAmplitude(0.55)
+                        .withShakeRecoilSpeed(3.7)
+                        .withViewRecoilAmplitude(4.5)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.22))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
         );
     }
 }

@@ -14,6 +14,8 @@ public class DerpySoundRegistry extends SoundEvents {
     public static SoundEvent PEACEMAKERDEAGLE_RELOAD = register("peacemakerdeagle_reload");
     public static SoundEvent PENGUINUMBRELLA_FIRE = register("penguinumbrella_fire");
     public static SoundEvent PENGUINUMBRELLA_RELOAD = register("penguinumbrella_reload");
+    public static SoundEvent JOKER_REVOLVER_FIRE = register("joker_revolver_fire");
+    public static SoundEvent JOKER_REVOLVER_RELOAD = register("joker_revolver_reload");
 
     public DerpySoundRegistry() {}
 

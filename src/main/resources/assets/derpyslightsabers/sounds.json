@@ -46,5 +46,21 @@
                 "stream": false
             }
         ]
+    },
+    "joker_revolver_fire": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:joker_revolver_fire",
+                "stream": false
+            }
+        ]
+    },
+    "joker_revolver_reload": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:joker_revolver_reload",
+                "stream": false
+            }
+        ]
     }
 }
