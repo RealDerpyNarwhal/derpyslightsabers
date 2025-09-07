@@ -1,9 +1,9 @@
 {
-	"format_version": "1.21.20",
+	"format_version": "1.12.0",
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.ee3carbine",
+				"identifier": "geometry.EE3BlasterCarbine",
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 7,
@@ -13,8 +13,7 @@
 			"bones": [
 				{
 					"name": "main",
-					"pivot": [0, 0, 0],
-					"rotation": [-17.5, 0, 0]
+					"pivot": [0, 0, 0]
 				},
 				{
 					"name": "gun",
@@ -3802,24 +3801,6 @@
 					]
 				},
 				{
-					"name": "rightarm",
-					"parent": "main",
-					"pivot": [-4.3, 8.8, 21.8],
-					"rotation": [-101.81106, -12.40003, -2.46982],
-					"cubes": [
-						{"origin": [-8.3, -15.2, 17.8], "size": [8, 24, 8], "uv": [32, 96]}
-					]
-				},
-				{
-					"name": "leftarm",
-					"parent": "main",
-					"pivot": [9.6, 7.075, -14.2],
-					"rotation": [-119.61483, 1.67666, -38.31282],
-					"cubes": [
-						{"origin": [8.075, -1.85, -26.3], "size": [8, 24, 8], "uv": [0, 96]}
-					]
-				},
-				{
 					"name": "scope",
 					"parent": "main",
 					"pivot": [0, 28.575, 9.75],
@@ -3833,6 +3814,24 @@
 					"pivot": [0, 21.15, -52.6],
 					"cubes": [
 						{"origin": [-0.5, 20.65, -52.9], "size": [1, 1, 1], "inflate": -0.4, "uv": [4, 42]}
+					]
+				},
+				{
+					"name": "rightarm",
+					"parent": "main",
+					"pivot": [-4.3, 8.8, 21.8],
+					"rotation": [-101.81106, -12.40003, -2.46982],
+					"cubes": [
+						{"origin": [-8.3, -12.2, 17.8], "size": [8, 24, 8], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "leftarm",
+					"parent": "main",
+					"pivot": [10.7, 11.3, -8.6],
+					"rotation": [-119.61483, 1.67666, -38.31282],
+					"cubes": [
+						{"origin": [5.7, 1.3, -15.6], "size": [8, 24, 8], "uv": [0, 0]}
 					]
 				}
 			]

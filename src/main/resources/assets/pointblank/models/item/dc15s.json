@@ -4,108 +4,37 @@
   "base": {
     "credit": "Made with Blockbench",
     "parent": "builtin/entity",
-    "texture_size": [
-      64,
-      64
-    ],
+    "texture_size": [64, 64],
     "display": {
       "thirdperson_righthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
+        "translation": [0, -4.25, 0],
+        "scale": [0.26, 0.26, 0.26]
       },
       "thirdperson_lefthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
+        "translation": [0, -4.25, 0],
+        "scale": [0.26, 0.26, 0.26]
       },
       "firstperson_righthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
+        "translation": [0, -14, -5.5],
+        "scale": [0.6, 0.6, 0.6]
       },
       "firstperson_lefthand": {
-        "translation": [
-          0,
-          -4.25,
-          0
-        ],
-        "scale": [
-          0.26,
-          0.26,
-          0.26
-        ]
-      },
-      "ground": {
-        "translation": [
-          0,
-          0,
-          5.75
-        ],
-        "scale": [
-          0.25,
-          0.25,
-          0.25
-        ]
+        "translation": [0, -14, -5.5],
+        "scale": [0.6, 0.6, 0.6]
       },
       "gui": {
-        "rotation": [
-          90,
-          48.25,
-          -90
-        ],
-        "translation": [
-          2.5,
-          -10.75,
-          0
-        ],
-        "scale": [
-          0.4,
-          0.4,
-          0.4
-        ]
+        "rotation": [90, -56, 90],
+        "translation": [-0.25, -5, 0],
+        "scale": [0.22, 0.22, 0.22]
       },
       "fixed": {
-        "rotation": [
-          90,
-          48.25,
-          -90
-        ],
-        "translation": [
-          2.5,
-          -10.75,
-          0
-        ],
-        "scale": [
-          0.4,
-          0.4,
-          0.4
-        ]
+        "rotation": [90, 56, -90],
+        "translation": [-1, -4.5, 0],
+        "scale": [0.26, 0.26, 0.26]
       }
     },
     "textures": {
-      "particle": "pointblank:item/dc-15s"
+      "particle": "pointblank:item/dc15s"
     }
   },
   "perspectives": {
