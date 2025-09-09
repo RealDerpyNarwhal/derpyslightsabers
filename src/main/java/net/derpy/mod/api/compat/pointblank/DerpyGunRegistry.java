@@ -57,7 +57,6 @@ public final class DerpyGunRegistry {
                         .withShakeRecoilAmplitude(0.35)
                         .withShakeRecoilSpeed(3.0)
                         .withViewRecoilAmplitude(3.0)
-                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_RED)
                         .withFeature(new MuzzleFlashFeature.Builder()
                                 .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_RED)
                                 .withCondition(Conditions.doesNotHaveAttachmentGroup("smg_suppressors")))
