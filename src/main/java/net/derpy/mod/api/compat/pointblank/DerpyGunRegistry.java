@@ -170,6 +170,12 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder().withZoom(0.25))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2800L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2800L, 0.2, 0.7))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2800L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2800L, 0.2, 0.7))))
         );
 
         PENGUINUMBRELLA = ItemRegistry.ITEMS.register(
@@ -194,15 +200,16 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder().withZoom(0.2))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
-                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2000L,
-                                new GunItem.ReloadAnimation("animation.model.penguinumbrella_reloadempty", List.of(
-                                        new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
-                                        new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
-                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2000L,
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 3000L,
                                 new GunItem.ReloadAnimation("animation.model.penguinumbrella_reload", List.of(
-                                        new GunItem.ReloadShakeEffect(0L, 2000L, 0.15, 0.7),
-                                        new GunItem.ReloadShakeEffect(100L, 800L, 0.25, 0.3))))
-
+                                        new GunItem.ReloadShakeEffect(0L, 3000L, 0.2, 0.7),
+                                        new GunItem.ReloadShakeEffect(300L, 1000L, 0.25, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 1000L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 3000L,
+                                new GunItem.ReloadAnimation("animation.model.penguinumbrella_reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3000L, 0.2, 0.7),
+                                        new GunItem.ReloadShakeEffect(300L, 1000L, 0.25, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 1000L, 0.2, 0.3))))
         );
 
         JOKER_REVOLVER = ItemRegistry.ITEMS.register(
@@ -227,6 +234,16 @@ public final class DerpyGunRegistry {
                         .withFeature(new AimingFeature.Builder().withZoom(0.22))
                         .withCompatibleAttachmentGroup("hg_sights")
                         .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 3550L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3550L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(500L, 1000L, 0.3, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 800L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 3550L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3550L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(500L, 1000L, 0.3, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 800L, 0.2, 0.3))))
         );
     }
 }

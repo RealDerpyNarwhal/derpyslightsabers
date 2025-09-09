@@ -59,7 +59,7 @@
 				{
 					"name": "muzzleflash",
 					"parent": "main",
-					"pivot": [-0.7, 24.35, -68.25],
+					"pivot": [-0.7, 20.65, -53.4],
 					"cubes": [
 						{"origin": [-1.2, 20.15, -53.9], "size": [1, 1, 1], "inflate": -0.4, "uv": [15, 11]}
 					]
