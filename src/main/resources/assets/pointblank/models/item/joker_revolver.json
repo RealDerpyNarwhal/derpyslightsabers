@@ -1,102 +1,114 @@
 {
-  "credit": "Made with Blockbench",
-  "parent": "builtin/entity",
-  "texture_size": [
-    150,
-    150
-  ],
-  "display": {
-    "thirdperson_righthand": {
-      "translation": [
-        0,
-        1.25,
-        5
-      ],
-      "scale": [
-        0.35,
-        0.35,
-        0.35
-      ]
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "credit": "Made with Blockbench",
+    "parent": "builtin/entity",
+    "texture_size": [
+      150,
+      150
+    ],
+    "display": {
+      "thirdperson_righthand": {
+        "translation": [
+          0,
+          1.25,
+          5
+        ],
+        "scale": [
+          0.35,
+          0.35,
+          0.35
+        ]
+      },
+      "thirdperson_lefthand": {
+        "translation": [
+          0,
+          1.25,
+          5
+        ],
+        "scale": [
+          0.35,
+          0.35,
+          0.35
+        ]
+      },
+      "firstperson_righthand": {
+        "translation": [
+          -1.75,
+          1.75,
+          0
+        ]
+      },
+      "firstperson_lefthand": {
+        "translation": [
+          -1.75,
+          1.75,
+          0
+        ]
+      },
+      "ground": {
+        "rotation": [
+          0,
+          0,
+          90
+        ],
+        "translation": [
+          -1.5,
+          0.5,
+          8.25
+        ],
+        "scale": [
+          0.35,
+          0.35,
+          0.35
+        ]
+      },
+      "gui": {
+        "rotation": [
+          90,
+          -58.25,
+          90
+        ],
+        "translation": [
+          -7,
+          -2.25,
+          0
+        ],
+        "scale": [
+          0.35,
+          0.35,
+          0.35
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          90,
+          -58.25,
+          90
+        ],
+        "translation": [
+          -6.25,
+          -1.25,
+          0
+        ],
+        "scale": [
+          0.35,
+          0.35,
+          0.35
+        ]
+      }
     },
-    "thirdperson_lefthand": {
-      "translation": [
-        0,
-        1.25,
-        5
-      ],
-      "scale": [
-        0.35,
-        0.35,
-        0.35
-      ]
-    },
-    "firstperson_righthand": {
-      "translation": [
-        -1.75,
-        1.75,
-        0
-      ]
-    },
-    "firstperson_lefthand": {
-      "translation": [
-        -1.75,
-        1.75,
-        0
-      ]
-    },
-    "ground": {
-      "rotation": [
-        0,
-        0,
-        90
-      ],
-      "translation": [
-        -1.5,
-        0.5,
-        8.25
-      ],
-      "scale": [
-        0.35,
-        0.35,
-        0.35
-      ]
-    },
-    "gui": {
-      "rotation": [
-        90,
-        -58.25,
-        90
-      ],
-      "translation": [
-        -7,
-        -2.25,
-        0
-      ],
-      "scale": [
-        0.35,
-        0.35,
-        0.35
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        90,
-        -58.25,
-        90
-      ],
-      "translation": [
-        -6.25,
-        -1.25,
-        0
-      ],
-      "scale": [
-        0.35,
-        0.35,
-        0.35
-      ]
+    "textures": {
+      "particle": "pointblank:item/joker_revolver"
     }
   },
-  "textures": {
-    "particle": "item/joker_revolver"
+  "perspectives": {
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "pointblank:item/joker_revolver.icon"
+      }
+    }
   }
 }
