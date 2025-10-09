@@ -57,35 +57,29 @@ public class AbilityWebSwing extends ThematicAbility {
             Vec3d rope = playerPos.subtract(anchor);
             double distance = rope.length();
 
-            // Swing physics with tangential boost
             if (distance > ropeLength) {
                 Vec3d ropeDir = rope.normalize();
 
-                // Tangential velocity
                 Vec3d vel = player.getVelocity();
                 Vec3d tangential = vel.subtract(ropeDir.multiply(vel.dotProduct(ropeDir)));
 
-                // Apply gravity
                 tangential = tangential.add(0, -GRAVITY_PULL, 0);
 
-                // Forward swing propulsion
                 Vec3d forwardBoost = tangential.normalize().multiply(SWING_BOOST);
                 tangential = tangential.add(forwardBoost);
 
-                // Update player velocity
                 player.setVelocity(tangential);
 
-                // Rope length correction
+
                 Vec3d correction = ropeDir.multiply(distance - ropeLength);
                 player.setVelocity(player.getVelocity().subtract(correction.multiply(0.25)));
             }
 
-            // Rope retraction while sneaking
+
             if (player.isSneaking() && distance > MIN_ROPE_LENGTH) {
                 ropeLengths.put(id, ropeLength - 0.1);
             }
 
-            // Auto-release if landing almost vertical
             if (player.isOnGround() && Math.abs(rope.y) < 2.0) {
                 releaseSwing(player);
             }
@@ -101,13 +95,11 @@ public class AbilityWebSwing extends ThematicAbility {
 
         UUID id = player.getUuid();
 
-        // Release if already swinging
         if (anchorPoints.containsKey(id)) {
             releaseSwing(player);
             return;
         }
 
-        // Auto-target nearest attachable block
         Vec3d anchor = findWebAnchor(player);
         if (anchor != null) {
             anchorPoints.put(id, anchor);
@@ -126,7 +118,6 @@ public class AbilityWebSwing extends ThematicAbility {
         Vec3d bestTarget = null;
         double closestDist = Double.MAX_VALUE;
 
-        // Scan a grid in front of player
         for (double dx = -0.5; dx <= 0.5; dx += 0.25) {
             for (double dy = 0; dy <= 1.0; dy += 0.25) {
                 for (double dz = -0.5; dz <= 0.5; dz += 0.25) {
