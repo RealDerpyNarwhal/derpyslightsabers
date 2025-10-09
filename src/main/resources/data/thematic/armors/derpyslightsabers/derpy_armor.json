@@ -17,6 +17,10 @@
     {
       "identifier": "force_slam",
       "keybind": "key.thematic.ability_3"
+    },
+    {
+      "identifier": "web_swing",
+      "keybind": "key.thematic.ability_4"
     }
   ],
   "attributes": [
