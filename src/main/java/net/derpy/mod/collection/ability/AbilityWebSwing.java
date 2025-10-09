@@ -22,6 +22,7 @@ public class AbilityWebSwing extends ThematicAbility {
     private static final double GRAVITY_PULL = 0.03;
     private static final double RELEASE_BOOST = 1.25;
     private static final double MIN_ROPE_LENGTH = 4.0;
+    private static final double SWING_BOOST = 0.02; // forward swing propulsion
 
     private final Map<UUID, Vec3d> anchorPoints = new HashMap<>();
     private final Map<UUID, Double> ropeLengths = new HashMap<>();
@@ -56,19 +57,25 @@ public class AbilityWebSwing extends ThematicAbility {
             Vec3d rope = playerPos.subtract(anchor);
             double distance = rope.length();
 
-            // Maintain rope constraint
+            // Swing physics with tangential boost
             if (distance > ropeLength) {
                 Vec3d ropeDir = rope.normalize();
 
-                // Project velocity perpendicular to rope for pendulum swing
+                // Tangential velocity
                 Vec3d vel = player.getVelocity();
                 Vec3d tangential = vel.subtract(ropeDir.multiply(vel.dotProduct(ropeDir)));
 
-                // Apply gravity along Y-axis
-                Vec3d gravity = new Vec3d(0, -GRAVITY_PULL, 0);
-                player.setVelocity(tangential.add(gravity));
+                // Apply gravity
+                tangential = tangential.add(0, -GRAVITY_PULL, 0);
 
-                // Correct overshoot
+                // Forward swing propulsion
+                Vec3d forwardBoost = tangential.normalize().multiply(SWING_BOOST);
+                tangential = tangential.add(forwardBoost);
+
+                // Update player velocity
+                player.setVelocity(tangential);
+
+                // Rope length correction
                 Vec3d correction = ropeDir.multiply(distance - ropeLength);
                 player.setVelocity(player.getVelocity().subtract(correction.multiply(0.25)));
             }
@@ -94,7 +101,7 @@ public class AbilityWebSwing extends ThematicAbility {
 
         UUID id = player.getUuid();
 
-        // If already swinging, release
+        // Release if already swinging
         if (anchorPoints.containsKey(id)) {
             releaseSwing(player);
             return;
@@ -119,7 +126,7 @@ public class AbilityWebSwing extends ThematicAbility {
         Vec3d bestTarget = null;
         double closestDist = Double.MAX_VALUE;
 
-        // Scan a 5x5x5 grid in front of player for blocks
+        // Scan a grid in front of player
         for (double dx = -0.5; dx <= 0.5; dx += 0.25) {
             for (double dy = 0; dy <= 1.0; dy += 0.25) {
                 for (double dz = -0.5; dz <= 0.5; dz += 0.25) {
