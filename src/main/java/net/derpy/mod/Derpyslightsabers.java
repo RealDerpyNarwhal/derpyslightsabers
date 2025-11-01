@@ -2,6 +2,7 @@ package net.derpy.mod;
 
 import bond.thematic.mod.Thematic;
 import net.derpy.mod.collection.LightsaberCollection;
+import net.derpy.mod.collection.PsychicCollection;
 import net.derpy.mod.entity.ModEntities;
 import net.derpy.mod.item.ModItemGroups;
 import net.derpy.mod.item.ModItems;
@@ -19,25 +20,29 @@ public class Derpyslightsabers implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// Step 1: Initialize GeckoLib
+		// Initialize GeckoLib
 		GeckoLib.initialize();
 
-		// Step 2: Register all mod items
+		// Register all mod items
 		ModItems.registerModItems();
 
-		// Step 3: Register all mod entities and their attributes
-		ModEntities.registerModEntities();  // ✅ Attribute registration included here
+		// Register all mod entities and their attributes
+		ModEntities.registerModEntities();
 
-		// Step 4: Register item groups
+		// Register item groups
 		ModItemGroups.registerItemGroups();
 
-		// Step 5: Register synced animatable items
+		// Register synced animatable items
 		GeoItem.registerSyncedAnimatable(ModItems.ANAKINS_LIGHTSABER);
 
-		// Step 6: Initialize Thematic content
+		// Register LightsaberCollection
 		LightsaberCollection lightsaberCollection = new LightsaberCollection();
 		Thematic.addCollection(lightsaberCollection);
 		lightsaberCollection.initServer();
+
+		PsychicCollection psychicCollection = new PsychicCollection();
+		Thematic.addCollection(psychicCollection);
+		psychicCollection.initServer();
 
 		LOGGER.info("Derpy's Lightsabers mod initialized successfully!");
 	}

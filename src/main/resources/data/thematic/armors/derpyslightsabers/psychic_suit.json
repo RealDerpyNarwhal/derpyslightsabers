@@ -1,0 +1,63 @@
+{
+  "wip": false,
+  "tier": 2,
+  "abilities": [
+    {
+      "identifier": "mind_crush",
+      "keybind": "key.thematic.ability_0"
+    },
+    {
+      "identifier": "psychic_rift",
+      "keybind": "key.thematic.ability_1"
+    },
+    {
+      "identifier": "psychic_vortex",
+      "keybind": "key.thematic.ability_2"
+    },
+    {
+      "identifier": "drone_swarm",
+      "keybind": "key.thematic.ability_3"
+    }
+  ],
+  "attributes": [
+    {
+      "identifier": "pehkui:base",
+      "effect": 1.0
+    }
+  ],
+  "stats": [
+    {
+      "identifier": "thematic:base_generic_attack",
+      "minimum": 6,
+      "maximum": 18
+    },
+    {
+      "identifier": "thematic:base_regen",
+      "minimum": 12,
+      "maximum": 25
+    },
+    {
+      "identifier": "thematic:base_generic_speed",
+      "minimum": 8,
+      "maximum": 18
+    },
+    {
+      "identifier": "thematic:base_utility",
+      "minimum": 10,
+      "maximum": 25
+    },
+    {
+      "identifier": "thematic:base_defense",
+      "minimum": 5,
+      "maximum": 12
+    },
+    {
+      "identifier": "thematic:base_combat",
+      "minimum": 8,
+      "maximum": 20
+    }
+  ],
+  "fighting_type": [
+    "PSYCHIC"
+  ]
+}

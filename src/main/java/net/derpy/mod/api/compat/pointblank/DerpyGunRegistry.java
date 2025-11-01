@@ -25,6 +25,8 @@ public final class DerpyGunRegistry {
     public static final Supplier<GunItem> PEACEMAKERDEAGLE;
     public static final Supplier<GunItem> PENGUINUMBRELLA;
     public static final Supplier<GunItem> JOKER_REVOLVER;
+    public static final Supplier<GunItem> TWOFACEREVOLVER;
+    public static final Supplier<GunItem> TOMMYGUN;
 
     public DerpyGunRegistry() {
     }
@@ -36,6 +38,8 @@ public final class DerpyGunRegistry {
         entries.accept(PEACEMAKERDEAGLE.get());
         entries.accept(PENGUINUMBRELLA.get());
         entries.accept(JOKER_REVOLVER.get());
+        entries.accept(TWOFACEREVOLVER.get());
+        entries.accept(TOMMYGUN.get());
     }
 
     public static void init() {
@@ -243,6 +247,74 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 3550L, 0.2, 0.8),
                                         new GunItem.ReloadShakeEffect(500L, 1000L, 0.3, 0.4),
                                         new GunItem.ReloadShakeEffect(1500L, 800L, 0.2, 0.3))))
+        );
+
+        TWOFACEREVOLVER = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("twofacerevolver")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(6)
+                        .withDamage(25.0F)
+                        .withRpm(90)
+                        .withFireModes(FireMode.SINGLE)
+                        .withFireSound(DerpySoundRegistry.TWOFACEREVOLVER_FIRE)
+                        .withReloadSound(DerpySoundRegistry.TWOFACEREVOLVER_RELOAD)
+                        .withDrawCooldownDuration(1000, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(4000, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(1.2)
+                        .withShakeRecoilAmplitude(0.55)
+                        .withShakeRecoilSpeed(3.5)
+                        .withViewRecoilAmplitude(4.5)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.22))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 3500L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3500L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(500L, 1000L, 0.3, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 800L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 3500L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3500L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(500L, 1000L, 0.3, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 800L, 0.2, 0.3))))
+        );
+
+        TOMMYGUN = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("tommygun")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(50)
+                        .withDamage(12.0F)
+                        .withRpm(700)
+                        .withFireModes(FireMode.AUTOMATIC)
+                        .withFireSound(DerpySoundRegistry.TOMMYGUN_FIRE)
+                        .withReloadSound(DerpySoundRegistry.TOMMYGUN_RELOAD)
+                        .withDrawCooldownDuration(900, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(3500, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(0.8)
+                        .withShakeRecoilAmplitude(0.35)
+                        .withShakeRecoilSpeed(3.0)
+                        .withViewRecoilAmplitude(3.0)
+                        .withEffect(FirePhase.HIT_SCAN_ACQUIRED, DerpyEffectRegistry.BLASTER_LASER_YELLOW)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_YELLOW))
+                        .withFeature(new AimingFeature.Builder().withZoom(0.2))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 3200L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3200L, 0.2, 0.7),
+                                        new GunItem.ReloadShakeEffect(300L, 1000L, 0.25, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 1000L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 3200L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 3200L, 0.2, 0.7),
+                                        new GunItem.ReloadShakeEffect(300L, 1000L, 0.25, 0.4),
+                                        new GunItem.ReloadShakeEffect(1500L, 1000L, 0.2, 0.3))))
         );
     }
 }

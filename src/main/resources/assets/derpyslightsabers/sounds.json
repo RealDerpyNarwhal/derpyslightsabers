@@ -62,5 +62,37 @@
                 "stream": false
             }
         ]
+    },
+    "twofacerevolver_fire": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:twofacerevolver_fire",
+                "stream": false
+            }
+        ]
+    },
+    "twofacerevolver_reload": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:twofacerevolver_reload",
+                "stream": false
+            }
+        ]
+    },
+    "tommygun_fire": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:tommygun_fire",
+                "stream": false
+            }
+        ]
+    },
+    "tommygun_reload": {
+        "sounds": [
+            {
+                "name": "derpyslightsabers:tommygun_reload",
+                "stream": false
+            }
+        ]
     }
 }

@@ -1,0 +1,114 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "credit": "Made with Blockbench",
+    "parent": "builtin/entity",
+    "texture_size": [
+      32,
+      32
+    ],
+    "display": {
+      "thirdperson_righthand": {
+        "translation": [
+          0,
+          -4.25,
+          0
+        ],
+        "scale": [
+          0.26,
+          0.26,
+          0.26
+        ]
+      },
+      "thirdperson_lefthand": {
+        "translation": [
+          0,
+          -4.25,
+          0
+        ],
+        "scale": [
+          0.26,
+          0.26,
+          0.26
+        ]
+      },
+      "firstperson_righthand": {
+        "translation": [
+          0,
+          -31,
+          -15
+        ],
+        "scale": [
+          1.18,
+          1.18,
+          1.18
+        ]
+      },
+      "firstperson_lefthand": {
+        "translation": [
+          0,
+          -31,
+          -15
+        ],
+        "scale": [
+          1.18,
+          1.18,
+          1.18
+        ]
+      },
+      "ground": {
+        "scale": [
+          0.28,
+          0.28,
+          0.28
+        ]
+      },
+      "gui": {
+        "rotation": [
+          89.99,
+          -65.47,
+          90.05
+        ],
+        "translation": [
+          1.5,
+          -4.5,
+          0
+        ],
+        "scale": [
+          0.23,
+          0.23,
+          0.23
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          90,
+          65.5,
+          -90
+        ],
+        "translation": [
+          -2,
+          -5.75,
+          0
+        ],
+        "scale": [
+          0.3,
+          0.3,
+          0.3
+        ]
+      }
+    },
+    "textures": {
+      "particle": "pointblank:item/tommygun"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "pointblank:item/tommygun.icon"
+      }
+    }
+  }
+}
