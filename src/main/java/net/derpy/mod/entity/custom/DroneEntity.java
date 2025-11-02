@@ -1,73 +1,79 @@
 package net.derpy.mod.entity.custom;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.control.FlightMoveControl;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.FlyingEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 
-public class DroneEntity extends FlyingEntity implements GeoEntity {
+public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private PlayerEntity owner;
 
-    public DroneEntity(EntityType<? extends FlyingEntity> type, World world) {
+    public DroneEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
-        this.moveControl = new FlightMoveControl(this, 10, true); // smooth flying
-        this.setNoGravity(true); // hover in air
+    }
+
+    // AI Goals
+    @Override
+    protected void initGoals() {
+        // Melee attack for combat
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.2, true));
+
+        // Wander around
+        this.goalSelector.add(2, new WanderAroundFarGoal(this, 1.0));
+
+        // Look at nearby players
+        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+
+        // Target nearby entities
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, true));
     }
 
     // Attributes
-    public static DefaultAttributeContainer.Builder setAttributes() {
-        return FlyingEntity.createMobAttributes()
+    public static DefaultAttributeContainer.Builder createDroneAttributes() {
+        return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
-                .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.6);
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35);
     }
 
-    // AI goals: simple hover/look
-    @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new LookAroundGoal(this)); // optional, for natural movement
+    // Owner methods
+    public void setOwner(PlayerEntity owner) {
+        this.owner = owner;
     }
 
-    // GeckoLib animation
-    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
-    private static final RawAnimation FLY = RawAnimation.begin().thenLoop("fly");
+    public PlayerEntity getOwner() {
+        return owner;
+    }
 
-    private <T extends GeoEntity> PlayState predicate(AnimationState<T> state) {
-        if (this.getVelocity().horizontalLengthSquared() > 1.0E-5) {
-            state.setAnimation(FLY);
-        } else {
-            state.setAnimation(IDLE);
-        }
-        return PlayState.CONTINUE;
+    public boolean canTarget(PlayerEntity target) {
+        // Optional: prevent attacking the owner
+        return super.canTarget(target) && (owner == null || target != owner);
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
+        return null;
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (!this.getWorld().isClient && this.getVelocity().horizontalLengthSquared() < 1.0E-5) {
-            double dx = (this.random.nextDouble() - 0.5) * 0.5;
-            double dy = (this.random.nextDouble() - 0.5) * 0.5;
-            double dz = (this.random.nextDouble() - 0.5) * 0.5;
-            this.setVelocity(dx, dy, dz);
-        }
+    public double getTick(Object o) {
+        return 0;
     }
 }
