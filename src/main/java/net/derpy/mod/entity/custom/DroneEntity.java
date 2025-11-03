@@ -30,7 +30,6 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
         this.moveControl = new MoveControl(this);
     }
 
-    /** Sets the player who spawned this drone (server-side!) */
     public void setOwner(PlayerEntity owner) {
         if (owner != null && !getWorld().isClient()) {
             this.ownerUuid = owner.getUuid();
@@ -44,7 +43,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
     public static DefaultAttributeContainer.Builder createDroneAttributes() {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.0)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0) // buffed damage
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35);
     }
 
@@ -80,7 +79,6 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
         if (nbt.containsUuid("OwnerUUID")) ownerUuid = nbt.getUuid("OwnerUUID");
     }
 
-    // -------------------- Drone AI --------------------
     private static class DroneAttackGoal extends Goal {
         private final DroneEntity drone;
         private LivingEntity target;
@@ -110,17 +108,14 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
             double dz = target.getZ() - drone.getZ();
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-            // Fly toward the target
             if (dist > 0.5) {
                 double speed = 0.6;
                 drone.setVelocity(dx / dist * speed, dy / dist * speed, dz / dist * speed);
                 drone.velocityModified = true;
             }
 
-            // Deal damage when close
             if (dist < 1.5) {
-                target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 6.0f);
-                target.addVelocity(dx * 0.6, 0.4, dz * 0.6);
+                target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 12.0f); // buffed damage
                 target = null;
             }
         }
@@ -139,5 +134,12 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
         private boolean isOwner(LivingEntity entity) {
             return entity != null && entity.getUuid().equals(drone.ownerUuid);
         }
+    }
+
+    @Override
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+
+        if (ownerUuid != null) return false;
+        return super.damage(source, amount);
     }
 }

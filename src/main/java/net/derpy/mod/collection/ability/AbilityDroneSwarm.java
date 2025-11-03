@@ -25,7 +25,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
     private static final double ATTACK_RANGE_SQ  = 64.0;
     private static final double SEARCH_RANGE     = 12.0;
     private static final int    LIFESPAN_TICKS   = 600;
-    private static final float  DAMAGE_ON_HIT    = 6.0f;
+    private static final float  DAMAGE_ON_HIT    = 12.0f; // buffed damage
     private static final double ORBIT_SMOOTH     = 0.5;
 
     private static class DroneState {
@@ -73,8 +73,6 @@ public class AbilityDroneSwarm extends ThematicAbility {
             drone.setPosition(pos.x, pos.y, pos.z);
             drone.setNoGravity(true);
             drone.setVelocity(Vec3d.ZERO);
-
-            // ✅ Set owner on server BEFORE spawning
             drone.setOwner(player);
 
             world.spawnEntity(drone);
@@ -94,6 +92,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
             DroneState ds = it.next();
             DroneEntity drone = ds.drone;
             if (!drone.isAlive() || drone.isRemoved()) { it.remove(); continue; }
+
             ds.ticksAlive++;
             ds.angle += ORBIT_SPEED_RADS;
             float cos = MathHelper.cos((float) ds.angle);
@@ -112,8 +111,8 @@ public class AbilityDroneSwarm extends ThematicAbility {
                     drone.setVelocity(dir.multiply(ATTACK_SPEED));
                     drone.velocityModified = true;
                     if (distSq <= 1.5) {
-                        target.damage(world.getDamageSources().mobAttack(drone), DAMAGE_ON_HIT);
-                        target.addVelocity(dir.x * 0.6, 0.4, dir.z * 0.6);
+                        target.damage(world.getDamageSources().mobAttack(drone), DAMAGE_ON_HIT); // buffed
+                        // No knockback
                         drone.discard();
                         it.remove();
                         continue;

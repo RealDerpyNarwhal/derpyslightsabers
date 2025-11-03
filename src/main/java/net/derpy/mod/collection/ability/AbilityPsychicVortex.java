@@ -19,11 +19,11 @@ import java.util.UUID;
 public class AbilityPsychicVortex extends ThematicAbility {
 
     private final Map<UUID, Integer> activeDurations = new HashMap<>();
-    private final int DURATION_TICKS = 100; // 5 seconds
-    private final int PULL_RADIUS = 5; // radius in blocks
+    private final int DURATION_TICKS = 100;
+    private final int PULL_RADIUS = 5;
     private final float DAMAGE_PER_SECOND = 2.5f;
-    private final double SPHERE_RADIUS = 4.0; // radius of the particle sphere
-    private final int PARTICLE_POINTS = 100; // number of particles on the sphere
+    private final double SPHERE_RADIUS = 4.0;
+    private final int PARTICLE_POINTS = 100;
 
     public AbilityPsychicVortex(String abilityId) {
         super(abilityId, AbilityType.PRESS);
@@ -78,7 +78,6 @@ public class AbilityPsychicVortex extends ThematicAbility {
                 double y = SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta);
                 double z = SPHERE_RADIUS * Math.cos(phi);
 
-                // Randomly choose purple or red
                 if (Math.random() < 0.5) {
                     player.getWorld().addParticle(ParticleTypes.END_ROD,
                             player.getX() + x, player.getY() + y, player.getZ() + z,
