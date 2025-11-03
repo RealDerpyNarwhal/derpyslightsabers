@@ -73,6 +73,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
             drone.setPosition(pos.x, pos.y, pos.z);
             drone.setNoGravity(true);
             drone.setVelocity(Vec3d.ZERO);
+
             drone.setOwner(player);
 
             world.spawnEntity(drone);

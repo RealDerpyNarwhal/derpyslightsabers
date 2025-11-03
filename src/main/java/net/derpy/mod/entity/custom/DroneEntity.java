@@ -116,6 +116,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
             if (dist < 1.5) {
                 target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 12.0f); // buffed damage
+                // Knockback removed
                 target = null;
             }
         }
@@ -138,7 +139,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
     @Override
     public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
-
+        // Invincible while owner is set (active in swarm)
         if (ownerUuid != null) return false;
         return super.damage(source, amount);
     }
