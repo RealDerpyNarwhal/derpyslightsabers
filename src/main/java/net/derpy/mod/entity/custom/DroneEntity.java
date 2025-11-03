@@ -3,7 +3,6 @@ package net.derpy.mod.entity.custom;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.Goal.Control;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -64,7 +63,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
     @Override
     public double getTick(Object o) {
-        return age + o.hashCode(); // dummy tick value for GeckoLib
+        return age + o.hashCode();
     }
 
     @Override
@@ -116,7 +115,6 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
             if (dist < 1.5) {
                 target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 12.0f); // buffed damage
-                // Knockback removed
                 target = null;
             }
         }
@@ -139,7 +137,6 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
     @Override
     public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
-        // Invincible while owner is set (active in swarm)
         if (ownerUuid != null) return false;
         return super.damage(source, amount);
     }

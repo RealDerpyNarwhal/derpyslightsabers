@@ -113,7 +113,6 @@ public class AbilityDroneSwarm extends ThematicAbility {
                     drone.velocityModified = true;
                     if (distSq <= 1.5) {
                         target.damage(world.getDamageSources().mobAttack(drone), DAMAGE_ON_HIT); // buffed
-                        // No knockback
                         drone.discard();
                         it.remove();
                         continue;
