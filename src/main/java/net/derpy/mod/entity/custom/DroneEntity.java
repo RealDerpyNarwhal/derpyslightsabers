@@ -10,8 +10,6 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
@@ -158,11 +156,11 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
             }
 
             if (dist < 1.5) {
-                target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 12.0f);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40, 4));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40, 2));
+                if (!isOwner(target)) {
+                    target.damage(drone.getWorld().getDamageSources().mobAttack(drone), 12.0f);
+                }
 
-                if (drone.getWorld() instanceof ServerWorld serverWorld) {
+                if (drone.getWorld() instanceof ServerWorld serverWorld && !isOwner(target)) {
                     serverWorld.spawnParticles(
                             ParticleTypes.ELECTRIC_SPARK,
                             target.getX(), target.getY() + 1, target.getZ(),
@@ -173,11 +171,10 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
                 List<LivingEntity> nearby = drone.getWorld().getEntitiesByClass(
                         LivingEntity.class,
                         drone.getBoundingBox().expand(3.5),
-                        e -> e.isAlive() && e != target && e != drone && !(e instanceof DroneEntity)
+                        e -> e.isAlive() && e != drone && !isOwner(e)
                 );
 
                 for (LivingEntity entity : nearby) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 25, 2));
                     if (drone.getWorld() instanceof ServerWorld serverWorld) {
                         serverWorld.spawnParticles(
                                 ParticleTypes.ELECTRIC_SPARK,
@@ -235,8 +232,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (source.getAttacker() != null && source.getAttacker().getUuid().equals(ownerUuid)) return false;
-        return super.damage(source, amount);
+        return false;
     }
 
     @Override
