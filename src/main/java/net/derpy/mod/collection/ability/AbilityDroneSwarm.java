@@ -17,21 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AbilityDroneSwarm extends ThematicAbility {
 
-    private static final int    NUM_DRONES          = 10;
-    private static final double ORBIT_RADIUS        = 3.0;
-    private static final double ORBIT_HEIGHT        = 2.0;
-    private static final double ORBIT_SPEED_RADS    = Math.toRadians(10);
-    private static final double ATTACK_SPEED        = 1.6;
-    private static final double ATTACK_RANGE_SQ     = 64.0;
-    private static final double SEARCH_RANGE        = 12.0;
-    private static final int    LIFESPAN_TICKS      = 600;
-    private static final float  DAMAGE_ON_HIT       = 6.0f;
-    private static final double ORBIT_SMOOTH        = 0.5;
+    private static final int    NUM_DRONES       = 10;
+    private static final double ORBIT_RADIUS     = 3.0;
+    private static final double ORBIT_HEIGHT     = 2.0;
+    private static final double ORBIT_SPEED_RADS = Math.toRadians(10);
+    private static final double ATTACK_SPEED     = 1.6;
+    private static final double ATTACK_RANGE_SQ  = 64.0;
+    private static final double SEARCH_RANGE     = 12.0;
+    private static final int    LIFESPAN_TICKS   = 600;
+    private static final float  DAMAGE_ON_HIT    = 6.0f;
+    private static final double ORBIT_SMOOTH     = 0.5;
 
     private static class DroneState {
         final DroneEntity drone;
         double angle;
-        int    ticksAlive;
+        int ticksAlive;
 
         DroneState(DroneEntity drone, double startAngle) {
             this.drone = drone;
@@ -60,16 +60,23 @@ public class AbilityDroneSwarm extends ThematicAbility {
         List<DroneState> list = new ArrayList<>(NUM_DRONES);
         double base = player.getRandom().nextDouble() * Math.PI * 2;
         Vec3d center = player.getPos().add(0, ORBIT_HEIGHT, 0);
+
         for (int i = 0; i < NUM_DRONES; i++) {
             double angle = base + i * (2 * Math.PI / NUM_DRONES);
             float cos = MathHelper.cos((float) angle);
             float sin = MathHelper.sin((float) angle);
             Vec3d pos = center.add(cos * ORBIT_RADIUS, 0, sin * ORBIT_RADIUS);
+
             DroneEntity drone = ModEntities.DRONE.create(world);
             if (drone == null) continue;
+
             drone.setPosition(pos.x, pos.y, pos.z);
             drone.setNoGravity(true);
             drone.setVelocity(Vec3d.ZERO);
+
+            // ✅ Set owner on server BEFORE spawning
+            drone.setOwner(player);
+
             world.spawnEntity(drone);
             list.add(new DroneState(drone, angle));
         }
@@ -96,6 +103,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
             drone.setVelocity(toOrbit);
             drone.velocityModified = true;
             drone.setNoGravity(true);
+
             LivingEntity target = nearestEnemy(world, player, drone);
             if (target != null && target.isAlive()) {
                 double distSq = drone.squaredDistanceTo(target);
@@ -112,28 +120,32 @@ public class AbilityDroneSwarm extends ThematicAbility {
                     }
                 }
             }
+
             if (ds.ticksAlive > LIFESPAN_TICKS) {
                 drone.discard();
                 it.remove();
             }
         }
+
         if (list.isEmpty()) swarms.remove(player.getUuid());
     }
 
-    private LivingEntity nearestEnemy(ServerWorld w, PlayerEntity owner, DroneEntity drone) {
+    private LivingEntity nearestEnemy(ServerWorld world, PlayerEntity owner, DroneEntity drone) {
         Box box = drone.getBoundingBox().expand(SEARCH_RANGE);
-        List<LivingEntity> candidates = w.getEntitiesByClass(LivingEntity.class, box, e ->
-                e.isAlive() && e != owner && !(e instanceof DroneEntity));
+        List<LivingEntity> candidates = world.getEntitiesByClass(LivingEntity.class, box, e ->
+                e.isAlive() && e != drone && !(e instanceof DroneEntity) &&
+                        !owner.getUuid().equals(e.getUuid()) // ignore owner
+        );
         if (candidates.isEmpty()) return null;
         candidates.sort(Comparator.comparingDouble(e -> e.squaredDistanceTo(drone)));
-        LivingEntity closest = candidates.get(0);
-        return (closest.squaredDistanceTo(drone) <= ATTACK_RANGE_SQ) ? closest : null;
+        return candidates.get(0);
     }
 
-    public void removeSwarm(PlayerEntity p) {
-        List<DroneState> list = swarms.remove(p.getUuid());
+    public void removeSwarm(PlayerEntity player) {
+        List<DroneState> list = swarms.remove(player.getUuid());
         if (list == null) return;
-        for (DroneState ds : list) if (ds.drone.isAlive() && !ds.drone.isRemoved()) ds.drone.discard();
+        for (DroneState ds : list)
+            if (ds.drone.isAlive() && !ds.drone.isRemoved()) ds.drone.discard();
     }
 
     @Override

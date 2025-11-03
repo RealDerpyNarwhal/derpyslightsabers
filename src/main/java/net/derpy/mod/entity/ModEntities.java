@@ -35,7 +35,7 @@ public class ModEntities {
             Registries.ENTITY_TYPE,
             new Identifier(Derpyslightsabers.MOD_ID, "drone"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, DroneEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.8f, 0.8f)) // adjust as needed
+                    .dimensions(EntityDimensions.fixed(0.8f, 0.8f))
                     .build()
     );
 
@@ -44,6 +44,6 @@ public class ModEntities {
 
         FabricDefaultAttributeRegistry.register(ASTROMECH, AstromechEntity.createAstromechAttributes());
         FabricDefaultAttributeRegistry.register(C3PO, C3POEntity.createC3POAttributes());
-        FabricDefaultAttributeRegistry.register(DRONE, DroneEntity.setAttributes());
+        FabricDefaultAttributeRegistry.register(DRONE, DroneEntity.createDroneAttributes());
     }
 }
