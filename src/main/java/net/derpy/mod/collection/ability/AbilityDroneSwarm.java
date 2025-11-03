@@ -22,7 +22,6 @@ public class AbilityDroneSwarm extends ThematicAbility {
     private static final double ORBIT_HEIGHT     = 2.0;
     private static final double ORBIT_SPEED_RADS = Math.toRadians(10);
     private static final double ATTACK_SPEED     = 1.6;
-    private static final double ATTACK_RANGE_SQ  = 64.0;
     private static final double SEARCH_RANGE     = 12.0;
     private static final int LIFESPAN_TICKS = 240;
     private static final float  DAMAGE_ON_HIT    = 12.0f;
@@ -166,7 +165,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
     @Override
     public DefaultOptions getDefaultData() {
         return new DefaultOptions.Builder()
-                .cooldown(100)
+                .cooldown(12)
                 .amplifier(NUM_DRONES)
                 .damage(DAMAGE_ON_HIT)
                 .build();
