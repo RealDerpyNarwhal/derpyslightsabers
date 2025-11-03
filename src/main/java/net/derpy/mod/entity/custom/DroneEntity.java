@@ -29,6 +29,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private UUID ownerUuid;
     private PlayerEntity cachedOwner;
+    private int lifetimeTicks = 0;
 
     public DroneEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -65,12 +66,14 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         if (ownerUuid != null) nbt.putUuid("OwnerUUID", ownerUuid);
+        nbt.putInt("LifetimeTicks", lifetimeTicks);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         if (nbt.containsUuid("OwnerUUID")) ownerUuid = nbt.getUuid("OwnerUUID");
+        if (nbt.contains("LifetimeTicks")) lifetimeTicks = nbt.getInt("LifetimeTicks");
     }
 
     @Override
@@ -84,13 +87,22 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
     @Override
     public void tick() {
         super.tick();
+
+        lifetimeTicks++;
+        if (lifetimeTicks >= 240) {
+            this.discard();
+            return;
+        }
+
         if (!getWorld().isClient() && cachedOwner == null && ownerUuid != null && this.getWorld() instanceof ServerWorld serverWorld) {
             cachedOwner = serverWorld.getPlayerByUuid(ownerUuid);
         }
+
         if (!getWorld().isClient() && (getOwner() == null || getOwner().isDead())) {
             this.discard();
             return;
         }
+
         if (getWorld().isClient()) {
             this.getWorld().addParticle(
                     ParticleTypes.ELECTRIC_SPARK,
@@ -100,6 +112,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
                     0.0, 0.02, 0.0
             );
         }
+
         if (!getWorld().isClient()) {
             List<Entity> nearby = this.getWorld().getOtherEntities(this, this.getBoundingBox().expand(1.0));
             for (Entity e : nearby) {

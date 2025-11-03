@@ -24,8 +24,8 @@ public class AbilityDroneSwarm extends ThematicAbility {
     private static final double ATTACK_SPEED     = 1.6;
     private static final double ATTACK_RANGE_SQ  = 64.0;
     private static final double SEARCH_RANGE     = 12.0;
-    private static final int    LIFESPAN_TICKS   = 600;
-    private static final float  DAMAGE_ON_HIT    = 12.0f; // buffed damage
+    private static final int LIFESPAN_TICKS = 240;
+    private static final float  DAMAGE_ON_HIT    = 12.0f;
     private static final double ORBIT_SMOOTH     = 0.5;
 
     private static class DroneState {
