@@ -84,41 +84,57 @@ public class AbilityDroneSwarm extends ThematicAbility {
 
     public void tick(PlayerEntity player) {
         if (player.getWorld().isClient()) return;
+
         ServerWorld world = (ServerWorld) player.getWorld();
         List<DroneState> list = swarms.get(player.getUuid());
         if (list == null || list.isEmpty()) return;
+
         Vec3d center = player.getPos().add(0, ORBIT_HEIGHT, 0);
         Iterator<DroneState> it = list.iterator();
+
         while (it.hasNext()) {
             DroneState ds = it.next();
             DroneEntity drone = ds.drone;
-            if (!drone.isAlive() || drone.isRemoved()) { it.remove(); continue; }
+
+            if (!drone.isAlive() || drone.isRemoved()) {
+                it.remove();
+                continue;
+            }
 
             ds.ticksAlive++;
             ds.angle += ORBIT_SPEED_RADS;
+
             float cos = MathHelper.cos((float) ds.angle);
             float sin = MathHelper.sin((float) ds.angle);
             Vec3d orbit = center.add(cos * ORBIT_RADIUS, 0, sin * ORBIT_RADIUS);
             Vec3d toOrbit = orbit.subtract(drone.getPos()).multiply(ORBIT_SMOOTH);
-            drone.setVelocity(toOrbit);
-            drone.velocityModified = true;
-            drone.setNoGravity(true);
 
             LivingEntity target = nearestEnemy(world, player, drone);
+
             if (target != null && target.isAlive()) {
                 double distSq = drone.squaredDistanceTo(target);
-                if (distSq <= ATTACK_RANGE_SQ) {
-                    Vec3d dir = target.getEyePos().subtract(drone.getPos()).normalize();
-                    drone.setVelocity(dir.multiply(ATTACK_SPEED));
-                    drone.velocityModified = true;
-                    if (distSq <= 1.5) {
-                        target.damage(world.getDamageSources().mobAttack(drone), DAMAGE_ON_HIT); // buffed
-                        drone.discard();
-                        it.remove();
-                        continue;
-                    }
+                Vec3d dir = target.getEyePos().subtract(drone.getPos()).normalize();
+                drone.setVelocity(dir.multiply(ATTACK_SPEED));
+                drone.velocityModified = true;
+
+                if (distSq <= 1.5) {
+                    target.damage(world.getDamageSources().mobAttack(drone), DAMAGE_ON_HIT);
+                    drone.discard();
+                    it.remove();
+                    continue;
                 }
+            } else {
+
+                Vec3d randomOffset = new Vec3d(
+                        (player.getRandom().nextDouble() - 0.5) * 0.5,
+                        (player.getRandom().nextDouble() - 0.5) * 0.2,
+                        (player.getRandom().nextDouble() - 0.5) * 0.5
+                );
+                drone.setVelocity(toOrbit.add(randomOffset));
+                drone.velocityModified = true;
             }
+
+            drone.setNoGravity(true);
 
             if (ds.ticksAlive > LIFESPAN_TICKS) {
                 drone.discard();
