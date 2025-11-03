@@ -14,9 +14,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import org.joml.Vector3f;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -106,13 +108,29 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
         }
 
         if (getWorld().isClient()) {
-            this.getWorld().addParticle(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    this.getX() + (random.nextDouble() - 0.5) * 0.3,
-                    this.getY() + 0.4,
-                    this.getZ() + (random.nextDouble() - 0.5) * 0.3,
-                    0.0, 0.02, 0.0
-            );
+            for (int i = 0; i < 3; i++) {
+                double offsetX = (random.nextDouble() - 0.5) * 0.3;
+                double offsetY = 0.4 + (random.nextDouble() - 0.5) * 0.2;
+                double offsetZ = (random.nextDouble() - 0.5) * 0.3;
+
+                if (random.nextBoolean()) {
+                    this.getWorld().addParticle(
+                            new DustParticleEffect(new Vector3f(1.0f, 0.0f, 0.0f), 1.0f),
+                            this.getX() + offsetX,
+                            this.getY() + offsetY,
+                            this.getZ() + offsetZ,
+                            0.0, 0.01, 0.0
+                    );
+                } else {
+                    this.getWorld().addParticle(
+                            ParticleTypes.SMOKE,
+                            this.getX() + offsetX,
+                            this.getY() + offsetY,
+                            this.getZ() + offsetZ,
+                            0.0, 0.02, 0.0
+                    );
+                }
+            }
         }
 
         if (!getWorld().isClient()) {
