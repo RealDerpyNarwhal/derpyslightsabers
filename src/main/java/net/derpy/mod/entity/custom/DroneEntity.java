@@ -104,13 +104,22 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
         }
 
         if (getWorld().isClient()) {
-            this.getWorld().addParticle(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    this.getX() + (random.nextDouble() - 0.5) * 0.3,
-                    this.getY() + 0.4,
-                    this.getZ() + (random.nextDouble() - 0.5) * 0.3,
-                    0.0, 0.02, 0.0
-            );
+            int particleCount = 200;
+            double radius = 2.5;
+            for (int i = 0; i < particleCount; i++) {
+                double theta = random.nextDouble() * 2 * Math.PI;
+                double phi = random.nextDouble() * Math.PI;
+                double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+                double yOffset = radius * Math.sin(phi) * Math.sin(theta);
+                double zOffset = radius * Math.cos(phi);
+                this.getWorld().addParticle(
+                        ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
+                        this.getX() + xOffset,
+                        this.getY() + 0.5 + yOffset,
+                        this.getZ() + zOffset,
+                        0.0, 0.02, 0.0
+                );
+            }
         }
 
         if (!getWorld().isClient()) {
