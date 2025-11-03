@@ -11,21 +11,22 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.item.ItemStack;
-
+import net.minecraft.particle.ParticleTypes;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AbilityDroneSwarm extends ThematicAbility {
 
-    private static final int    NUM_DRONES       = 10;
-    private static final double ORBIT_RADIUS     = 3.0;
-    private static final double ORBIT_HEIGHT     = 2.0;
+    private static final int NUM_DRONES = 10;
+    private static final double ORBIT_RADIUS = 3.0;
+    private static final double ORBIT_HEIGHT = 2.0;
     private static final double ORBIT_SPEED_RADS = Math.toRadians(10);
-    private static final double ATTACK_SPEED     = 1.6;
-    private static final double SEARCH_RANGE     = 12.0;
+    private static final double ATTACK_SPEED = 1.6;
+    private static final double SEARCH_RANGE = 12.0;
     private static final int LIFESPAN_TICKS = 240;
-    private static final float  DAMAGE_ON_HIT    = 12.0f;
-    private static final double ORBIT_SMOOTH     = 0.5;
+    private static final float DAMAGE_ON_HIT = 12.0f;
+    private static final double ORBIT_SMOOTH = 0.5;
+    private static final double SMOKE_RADIUS = 15.0;
 
     private static class DroneState {
         final DroneEntity drone;
@@ -50,6 +51,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
         super.press(player, stack);
         if (player.getWorld().isClient() || getCooldown(player) > 0) return;
         spawnSwarm(player);
+        spawnSmokeSphere(player);
         setCooldown(player, cooldown(player));
     }
 
@@ -72,13 +74,33 @@ public class AbilityDroneSwarm extends ThematicAbility {
             drone.setPosition(pos.x, pos.y, pos.z);
             drone.setNoGravity(true);
             drone.setVelocity(Vec3d.ZERO);
-
             drone.setOwner(player);
-
             world.spawnEntity(drone);
+
             list.add(new DroneState(drone, angle));
         }
         swarms.put(player.getUuid(), list);
+    }
+
+    private void spawnSmokeSphere(PlayerEntity player) {
+        ServerWorld world = (ServerWorld) player.getWorld();
+        Vec3d center = player.getPos();
+        int layers = 10;
+        int particlesPerLayer = 100;
+
+        for (int layer = 0; layer <= layers; layer++) {
+            double radius = SMOKE_RADIUS * (layer / (double) layers);
+            for (int i = 0; i < particlesPerLayer; i++) {
+                double theta = 2 * Math.PI * Math.random();
+                double phi = Math.acos(2 * Math.random() - 1);
+
+                double x = center.x + radius * Math.sin(phi) * Math.cos(theta);
+                double y = center.y + radius * Math.sin(phi) * Math.sin(theta);
+                double z = center.z + radius * Math.cos(phi);
+
+                world.spawnParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, x, y, z, 1, 0, 0, 0, 0);
+            }
+        }
     }
 
     public void tick(PlayerEntity player) {
@@ -123,7 +145,6 @@ public class AbilityDroneSwarm extends ThematicAbility {
                     continue;
                 }
             } else {
-
                 Vec3d randomOffset = new Vec3d(
                         (player.getRandom().nextDouble() - 0.5) * 0.5,
                         (player.getRandom().nextDouble() - 0.5) * 0.2,
@@ -148,7 +169,7 @@ public class AbilityDroneSwarm extends ThematicAbility {
         Box box = drone.getBoundingBox().expand(SEARCH_RANGE);
         List<LivingEntity> candidates = world.getEntitiesByClass(LivingEntity.class, box, e ->
                 e.isAlive() && e != drone && !(e instanceof DroneEntity) &&
-                        !owner.getUuid().equals(e.getUuid()) // ignore owner
+                        !owner.getUuid().equals(e.getUuid())
         );
         if (candidates.isEmpty()) return null;
         candidates.sort(Comparator.comparingDouble(e -> e.squaredDistanceTo(drone)));
