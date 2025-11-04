@@ -17,6 +17,10 @@
     {
       "identifier": "drone_swarm",
       "keybind": "key.thematic.ability_3"
+    },
+    {
+      "identifier": "absolute_zero",
+      "keybind": "key.thematic.ability_4"
     }
   ],
   "attributes": [

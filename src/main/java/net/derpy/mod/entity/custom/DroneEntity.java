@@ -9,7 +9,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
@@ -163,7 +162,7 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
 
     private static class DroneAttackGoal extends Goal {
         private final DroneEntity drone;
-        private LivingEntity target;
+        private PlayerEntity target; // Only targets players
 
         public DroneAttackGoal(DroneEntity drone) {
             this.drone = drone;
@@ -221,14 +220,15 @@ public class DroneEntity extends PathAwareEntity implements GeoAnimatable {
             }
         }
 
-        private LivingEntity findNearestTarget() {
-            return drone.getWorld().getEntitiesByClass(LivingEntity.class, drone.getBoundingBox().expand(32),
-                            e -> e.isAlive() && e != drone && !(e instanceof DroneEntity) && !isOwner(e))
-                    .stream().min((a, b) -> Double.compare(a.squaredDistanceTo(drone), b.squaredDistanceTo(drone)))
+        private PlayerEntity findNearestTarget() {
+            return drone.getWorld().getEntitiesByClass(PlayerEntity.class, drone.getBoundingBox().expand(32),
+                            e -> e.isAlive() && !isOwner(e))
+                    .stream()
+                    .min((a, b) -> Double.compare(a.squaredDistanceTo(drone), b.squaredDistanceTo(drone)))
                     .orElse(null);
         }
 
-        private boolean isOwner(LivingEntity entity) {
+        private boolean isOwner(PlayerEntity entity) {
             PlayerEntity owner = drone.getOwner();
             return entity != null && owner != null && entity.getUuid().equals(owner.getUuid());
         }

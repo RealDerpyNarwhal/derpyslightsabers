@@ -4,6 +4,7 @@ import net.derpy.mod.Derpyslightsabers;
 import net.derpy.mod.entity.custom.AstromechEntity;
 import net.derpy.mod.entity.custom.C3POEntity;
 import net.derpy.mod.entity.custom.DroneEntity;
+import net.derpy.mod.entity.custom.IceShardEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityDimensions;
@@ -39,11 +40,20 @@ public class ModEntities {
                     .build()
     );
 
+    public static final EntityType<IceShardEntity> ICE_SHARD = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(Derpyslightsabers.MOD_ID, "ice_shard"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, IceShardEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.3f, 0.3f))
+                    .build()
+    );
+
     public static void registerModEntities() {
         Derpyslightsabers.LOGGER.info("Registering Mod Entities for " + Derpyslightsabers.MOD_ID);
 
         FabricDefaultAttributeRegistry.register(ASTROMECH, AstromechEntity.createAstromechAttributes());
         FabricDefaultAttributeRegistry.register(C3PO, C3POEntity.createC3POAttributes());
         FabricDefaultAttributeRegistry.register(DRONE, DroneEntity.createDroneAttributes());
+        FabricDefaultAttributeRegistry.register(ICE_SHARD, IceShardEntity.createIceShardAttributes());
     }
 }

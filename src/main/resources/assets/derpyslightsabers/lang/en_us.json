@@ -26,8 +26,11 @@
   "mind_crush": "Mind Crush",
   "psychic_rift": "Psychic Rift",
   "drone_swarm": "Drone Swarm",
+  "absolute_zero": "Absolute Zero",
 
   //entity lang
   "entity.derpylightsabers.astromech": "Astromech",
-  "entity.derpylightsabers.c3po": "C3PO"
+  "entity.derpylightsabers.c3po": "C3PO",
+  "entity.derpylightsabers.drone": "Drone",
+  "entity.derpylightsabers.ice_shard": "Ice Shard"
 }
