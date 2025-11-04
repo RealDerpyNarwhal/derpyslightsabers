@@ -1,5 +1,6 @@
 package net.derpy.mod.entity.custom;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -51,8 +52,7 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     }
 
     @Override
-    protected void initGoals() {
-    }
+    protected void initGoals() {}
 
     @Override
     public void tick() {
@@ -78,10 +78,10 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         if (getY() < targetY) {
             this.setVelocity(0, 0.25, 0);
             this.move(MovementType.SELF, getVelocity());
-            applyPowderSnowFreeze();
+            applyFreezeEffect();
         } else {
             if (!effectApplied) {
-                applyPowderSnowFreeze();
+                applyFreezeEffect();
                 effectApplied = true;
                 serverWorld.spawnParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 20, 1, 1, 1, 0.1);
                 serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.PLAYERS, 1.0f, 0.8f);
@@ -96,7 +96,7 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         }
     }
 
-    private void applyPowderSnowFreeze() {
+    private void applyFreezeEffect() {
         if (!(getWorld() instanceof ServerWorld serverWorld)) return;
 
         double radius = 1.5;
@@ -105,11 +105,17 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
                 e -> e.isAlive() && e != owner);
 
         for (LivingEntity target : targets) {
-            int newFrozen = Math.min(target.getFrozenTicks() + 4, 140);
-            target.setFrozenTicks(newFrozen);
+            target.setFrozenTicks(Math.min(target.getFrozenTicks() + 4, 140));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 10, false, false));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 60, 10, false, false));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 60, 250, false, false));
 
-            if (!target.hasStatusEffect(StatusEffects.SLOWNESS)) {
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40, 1, false, false));
+            target.setVelocity(0, 0, 0);
+            target.velocityModified = true;
+
+            if (target instanceof PathAwareEntity mob) {
+                mob.getNavigation().stop();
+                mob.getMoveControl().moveTo(target.getX(), target.getY(), target.getZ(), 0);
             }
         }
 
@@ -124,8 +130,7 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -155,5 +160,13 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     @Override
     public boolean isCollidable() {
         return false;
+    }
+
+    public boolean collides() {
+        return false;
+    }
+
+    @Override
+    protected void pushAway(Entity entity) {
     }
 }

@@ -10,13 +10,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AbilityAbsoluteZero extends ThematicAbility {
 
     private static final double RADIUS = 6.0;
-    private static final int NUM_SHARDS = 5;
     private static final int DURATION_TICKS = 20 * 20;
     private static final int TICK_INTERVAL = 20;
     private static final float DAMAGE_TOTAL = 24f;
@@ -45,34 +46,38 @@ public class AbilityAbsoluteZero extends ThematicAbility {
         if (player.getWorld().isClient() || getCooldown(player) > 0) return;
 
         ServerWorld world = (ServerWorld) player.getWorld();
+
         List<LivingEntity> targets = world.getEntitiesByClass(LivingEntity.class,
                 player.getBoundingBox().expand(RADIUS),
                 e -> e.isAlive() && e != player);
 
         List<TargetState> states = new ArrayList<>();
+
         for (LivingEntity target : targets) {
             states.add(new TargetState(target));
-            for (int i = 0; i < NUM_SHARDS; i++) {
-                IceShardEntity shard = new IceShardEntity(ModEntities.ICE_SHARD, world);
-                double startY = target.getY() - SHARD_START_OFFSET;
-                shard.refreshPositionAndAngles(target.getX(), startY, target.getZ(), 0, 0);
-                shard.setStartY(startY);
-                shard.setOwner(player);
-                shard.velocityModified = true;
-                world.spawnEntity(shard);
-            }
+
+            IceShardEntity shard = new IceShardEntity(ModEntities.ICE_SHARD, world);
+            double startY = target.getY() - SHARD_START_OFFSET;
+            shard.refreshPositionAndAngles(target.getX(), startY, target.getZ(), 0, 0);
+            shard.setStartY(startY);
+            shard.setOwner(player);
+            shard.setNoGravity(true);
+            shard.noClip = true;
+            world.spawnEntity(shard);
         }
 
         frozenTargets.put(player.getUuid(), states);
         setCooldown(player, cooldown(player));
-        startDamageTask(player, world, states);
+
+        startDamageAndFreezeTask(player, world, states);
     }
 
-    private void startDamageTask(PlayerEntity player, ServerWorld world, List<TargetState> states) {
+    private void startDamageAndFreezeTask(PlayerEntity player, ServerWorld world, List<TargetState> states) {
         float damagePerTick = DAMAGE_TOTAL / (DURATION_TICKS / TICK_INTERVAL);
 
-        for (int tick = TICK_INTERVAL; tick <= DURATION_TICKS; tick += TICK_INTERVAL) {
+        for (int tick = 0; tick <= DURATION_TICKS; tick += TICK_INTERVAL) {
             int delay = tick;
+
             world.getServer().execute(() -> {
                 Iterator<TargetState> it = states.iterator();
                 while (it.hasNext()) {
@@ -83,10 +88,13 @@ public class AbilityAbsoluteZero extends ThematicAbility {
                         continue;
                     }
 
+                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, TICK_INTERVAL + 5, 0, false, false));
+                    target.setVelocity(Vec3d.ZERO);
+                    target.velocityModified = true;
                     target.damage(world.getDamageSources().magic(), damagePerTick);
 
                     Vec3d pos = target.getPos().add(0, target.getHeight() / 2.0, 0);
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < 6; i++) {
                         double offsetX = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
                         double offsetY = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
                         double offsetZ = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
