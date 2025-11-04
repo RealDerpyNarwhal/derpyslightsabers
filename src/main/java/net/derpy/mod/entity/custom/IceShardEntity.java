@@ -78,21 +78,20 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         if (getY() < targetY) {
             this.setVelocity(0, 0.25, 0);
             this.move(MovementType.SELF, getVelocity());
-            applyFreezeEffect();
         } else {
             if (!effectApplied) {
-                applyFreezeEffect();
                 effectApplied = true;
                 serverWorld.spawnParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 20, 1, 1, 1, 0.1);
                 serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.PLAYERS, 1.0f, 0.8f);
             }
 
             this.setVelocity(0, 0, 0);
-            this.noClip = false;
+        }
 
-            if (this.age > 40) {
-                this.discard();
-            }
+        applyFreezeEffect();
+
+        if (this.age > 20 * 12) {
+            this.discard();
         }
     }
 
@@ -105,13 +104,13 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
                 e -> e.isAlive() && e != owner);
 
         for (LivingEntity target : targets) {
-            target.setFrozenTicks(Math.min(target.getFrozenTicks() + 4, 140));
+            target.setVelocity(0, 0, 0);
+            target.velocityModified = true;
+            target.noClip = true;
+
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 10, false, false));
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 60, 10, false, false));
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 60, 250, false, false));
-
-            target.setVelocity(0, 0, 0);
-            target.velocityModified = true;
 
             if (target instanceof PathAwareEntity mob) {
                 mob.getNavigation().stop();
@@ -125,8 +124,6 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
             double offsetZ = (random.nextDouble() - 0.5) * 1.5;
             serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL, getX() + offsetX, getY() + offsetY, getZ() + offsetZ, 1, 0, 0, 0, 0);
         }
-
-        serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 0.5f, 1.0f);
     }
 
     @Override
@@ -159,10 +156,6 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
 
     @Override
     public boolean isCollidable() {
-        return false;
-    }
-
-    public boolean collides() {
         return false;
     }
 

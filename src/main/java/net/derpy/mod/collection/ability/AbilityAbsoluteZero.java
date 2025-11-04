@@ -18,9 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AbilityAbsoluteZero extends ThematicAbility {
 
     private static final double RADIUS = 6.0;
-    private static final int DURATION_TICKS = 20 * 20;
-    private static final int TICK_INTERVAL = 20;
-    private static final float DAMAGE_TOTAL = 24f;
+    private static final int DURATION_TICKS = 20 * 12; // 12 seconds
+    private static final int TICK_INTERVAL = 20 * 3; // every 3 seconds
+    private static final float DAMAGE_TOTAL = 24f; // 12 hearts
     private static final double SHARD_START_OFFSET = 4.0;
     private static final double PARTICLE_RADIUS = 1.5;
 
@@ -73,9 +73,9 @@ public class AbilityAbsoluteZero extends ThematicAbility {
     }
 
     private void startDamageAndFreezeTask(PlayerEntity player, ServerWorld world, List<TargetState> states) {
-        float damagePerTick = DAMAGE_TOTAL / (DURATION_TICKS / TICK_INTERVAL);
+        float damagePerTick = DAMAGE_TOTAL / (DURATION_TICKS / TICK_INTERVAL); // split total damage over intervals
 
-        for (int tick = 0; tick <= DURATION_TICKS; tick += TICK_INTERVAL) {
+        for (int tick = 0; tick < DURATION_TICKS; tick += TICK_INTERVAL) {
             int delay = tick;
 
             world.getServer().execute(() -> {
@@ -88,11 +88,17 @@ public class AbilityAbsoluteZero extends ThematicAbility {
                         continue;
                     }
 
+                    // Apply blindness
                     target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, TICK_INTERVAL + 5, 0, false, false));
+
+                    // Freeze in place
                     target.setVelocity(Vec3d.ZERO);
                     target.velocityModified = true;
+
+                    // Deal damage
                     target.damage(world.getDamageSources().magic(), damagePerTick);
 
+                    // Spawn ice particles
                     Vec3d pos = target.getPos().add(0, target.getHeight() / 2.0, 0);
                     for (int i = 0; i < 6; i++) {
                         double offsetX = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
