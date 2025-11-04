@@ -7,9 +7,12 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.world.World;
 import net.minecraft.entity.MovementType;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.particle.ParticleTypes;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -21,18 +24,25 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private LivingEntity owner;
-    private boolean reachedTarget = false;
-    private double targetY; // where the shard should stop (middle of entity)
+    private double startY;
+    private boolean effectApplied = false;
 
     public IceShardEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
-        this.setInvisible(true); // start underground
+        this.setInvisible(true);
     }
 
-    public void setOwner(LivingEntity owner) { this.owner = owner; }
-    public LivingEntity getOwner() { return owner; }
+    public void setOwner(LivingEntity owner) {
+        this.owner = owner;
+    }
 
-    public void setTargetY(double y) { this.targetY = y; }
+    public LivingEntity getOwner() {
+        return owner;
+    }
+
+    public void setStartY(double y) {
+        this.startY = y;
+    }
 
     public static DefaultAttributeContainer.Builder createIceShardAttributes() {
         return PathAwareEntity.createMobAttributes()
@@ -41,39 +51,52 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     }
 
     @Override
-    protected void initGoals() { }
+    protected void initGoals() {
+    }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (!reachedTarget) {
-            // Rise slowly
-            this.setVelocity(0, 0.5, 0);
+        this.noClip = true;
+        this.setInvisible(false);
+
+        if (getWorld().isClient()) return;
+
+        ServerWorld serverWorld = (ServerWorld) getWorld();
+
+        double groundY = getY();
+        for (int i = 0; i < 10; i++) {
+            if (!getWorld().isAir(getBlockPos().down(i))) {
+                groundY = getBlockY() - i;
+                break;
+            }
+        }
+
+        double targetY = groundY + 1.0;
+
+        if (getY() < targetY) {
+            this.setVelocity(0, 0.25, 0);
             this.move(MovementType.SELF, getVelocity());
-
-            // Stop when the shard's bottom reaches targetY
-            if (this.getY() >= targetY) {
-                this.setVelocity(0, 0, 0);
-                reachedTarget = true;
-                this.setInvisible(false); // become visible
-            }
+            applyPowderSnowFreeze();
         } else {
-            // Spawn particles above surface
-            if (getWorld() instanceof ServerWorld serverWorld) {
-                serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL,
-                        getX(), getY(), getZ(), 2,
-                        0.1, 0.1, 0.1, 0.0);
+            if (!effectApplied) {
+                applyPowderSnowFreeze();
+                effectApplied = true;
+                serverWorld.spawnParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 20, 1, 1, 1, 0.1);
+                serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.PLAYERS, 1.0f, 0.8f);
             }
 
-            // Deal AoE damage once
-            if (this.age == 1) {
-                dealAoEDamage();
+            this.setVelocity(0, 0, 0);
+            this.noClip = false;
+
+            if (this.age > 40) {
+                this.discard();
             }
         }
     }
 
-    private void dealAoEDamage() {
+    private void applyPowderSnowFreeze() {
         if (!(getWorld() instanceof ServerWorld serverWorld)) return;
 
         double radius = 1.5;
@@ -82,43 +105,55 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
                 e -> e.isAlive() && e != owner);
 
         for (LivingEntity target : targets) {
-            target.damage(getWorld().getDamageSources().magic(), 6.0f);
-            target.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
-                    net.minecraft.entity.effect.StatusEffects.SLOWNESS, 60, 2));
+            int newFrozen = Math.min(target.getFrozenTicks() + 4, 140);
+            target.setFrozenTicks(newFrozen);
+
+            if (!target.hasStatusEffect(StatusEffects.SLOWNESS)) {
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40, 1, false, false));
+            }
         }
 
-        // Impact particles
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             double offsetX = (random.nextDouble() - 0.5) * 1.5;
             double offsetY = random.nextDouble() * 0.5;
             double offsetZ = (random.nextDouble() - 0.5) * 1.5;
-            serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL,
-                    getX() + offsetX, getY() + offsetY, getZ() + offsetZ,
-                    1, 0, 0, 0, 0);
+            serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL, getX() + offsetX, getY() + offsetY, getZ() + offsetZ, 1, 0, 0, 0, 0);
         }
 
-        // Impact sound
-        serverWorld.playSound(null, getX(), getY(), getZ(),
-                net.minecraft.sound.SoundEvents.BLOCK_GLASS_BREAK,
-                net.minecraft.sound.SoundCategory.PLAYERS,
-                1.0f, 1.0f);
+        serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 0.5f, 1.0f);
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() { return cache; }
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
 
     @Override
-    public double getTick(Object o) { return age; }
+    public double getTick(Object o) {
+        return age;
+    }
 
     @Override
-    public boolean damage(DamageSource source, float amount) { return false; }
+    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+        return false;
+    }
+
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) { return false; }
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, net.minecraft.entity.damage.DamageSource damageSource) {
+        return false;
+    }
+
     @Override
-    public boolean isPushable() { return false; }
+    public boolean isPushable() {
+        return false;
+    }
+
     @Override
-    public boolean isCollidable() { return false; }
+    public boolean isCollidable() {
+        return false;
+    }
 }

@@ -44,7 +44,7 @@ public class PsychicCollection extends Collection {
                 new AbilityMindCrush("mind_crush"),
                 new AbilityPsychicRift("psychic_rift"),
                 new AbilityDroneSwarm("drone_swarm"),
-                new AbilityAbsoluteZero("absolute_zero") // <-- added
+                new AbilityAbsoluteZero("absolute_zero")
         );
     }
 }

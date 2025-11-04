@@ -1,18 +1,39 @@
 package net.derpy.mod.collection.ability;
 
+import bond.thematic.api.registries.armors.ability.DefaultOptions;
 import bond.thematic.api.registries.armors.ability.ThematicAbility;
 import net.derpy.mod.entity.ModEntities;
 import net.derpy.mod.entity.custom.IceShardEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AbilityAbsoluteZero extends ThematicAbility {
+
+    private static final double RADIUS = 6.0;
+    private static final int NUM_SHARDS = 5;
+    private static final int DURATION_TICKS = 20 * 20;
+    private static final int TICK_INTERVAL = 20;
+    private static final float DAMAGE_TOTAL = 24f;
+    private static final double SHARD_START_OFFSET = 4.0;
+    private static final double PARTICLE_RADIUS = 1.5;
+
+    private static class TargetState {
+        final LivingEntity entity;
+        int ticksElapsed;
+
+        TargetState(LivingEntity entity) {
+            this.entity = entity;
+            this.ticksElapsed = 0;
+        }
+    }
+
+    private final Map<UUID, List<TargetState>> frozenTargets = new ConcurrentHashMap<>();
 
     public AbilityAbsoluteZero(String id) {
         super(id, AbilityType.PRESS);
@@ -20,32 +41,69 @@ public class AbilityAbsoluteZero extends ThematicAbility {
 
     @Override
     public void press(PlayerEntity player, ItemStack stack) {
-        if (player.getWorld().isClient()) return; // server only
+        super.press(player, stack);
+        if (player.getWorld().isClient() || getCooldown(player) > 0) return;
 
         ServerWorld world = (ServerWorld) player.getWorld();
-        double radius = 6.0; // range around player to hit enemies
-
-        // Find all nearby enemies
         List<LivingEntity> targets = world.getEntitiesByClass(LivingEntity.class,
-                player.getBoundingBox().expand(radius),
+                player.getBoundingBox().expand(RADIUS),
                 e -> e.isAlive() && e != player);
 
+        List<TargetState> states = new ArrayList<>();
         for (LivingEntity target : targets) {
-            // Spawn shard 1 block underground
-            IceShardEntity shard = new IceShardEntity(ModEntities.ICE_SHARD, world);
-            double startY = target.getY() - 1.0; // underground
-            double targetY = target.getY() + target.getHeight() / 2.0; // middle of entity
-            shard.refreshPositionAndAngles(target.getX(), startY, target.getZ(), 0, 0);
-            shard.setTargetY(targetY);
-
-            // Upward velocity
-            shard.setVelocity(new Vec3d(0, 0.5, 0));
-            shard.velocityModified = true;
-
-            // Owner tracking
-            shard.setOwner(player);
-
-            world.spawnEntity(shard);
+            states.add(new TargetState(target));
+            for (int i = 0; i < NUM_SHARDS; i++) {
+                IceShardEntity shard = new IceShardEntity(ModEntities.ICE_SHARD, world);
+                double startY = target.getY() - SHARD_START_OFFSET;
+                shard.refreshPositionAndAngles(target.getX(), startY, target.getZ(), 0, 0);
+                shard.setStartY(startY);
+                shard.setOwner(player);
+                shard.velocityModified = true;
+                world.spawnEntity(shard);
+            }
         }
+
+        frozenTargets.put(player.getUuid(), states);
+        setCooldown(player, cooldown(player));
+        startDamageTask(player, world, states);
+    }
+
+    private void startDamageTask(PlayerEntity player, ServerWorld world, List<TargetState> states) {
+        float damagePerTick = DAMAGE_TOTAL / (DURATION_TICKS / TICK_INTERVAL);
+
+        for (int tick = TICK_INTERVAL; tick <= DURATION_TICKS; tick += TICK_INTERVAL) {
+            int delay = tick;
+            world.getServer().execute(() -> {
+                Iterator<TargetState> it = states.iterator();
+                while (it.hasNext()) {
+                    TargetState ts = it.next();
+                    LivingEntity target = ts.entity;
+                    if (!target.isAlive() || target.isRemoved()) {
+                        it.remove();
+                        continue;
+                    }
+
+                    target.damage(world.getDamageSources().magic(), damagePerTick);
+
+                    Vec3d pos = target.getPos().add(0, target.getHeight() / 2.0, 0);
+                    for (int i = 0; i < 5; i++) {
+                        double offsetX = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
+                        double offsetY = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
+                        double offsetZ = (world.random.nextDouble() - 0.5) * PARTICLE_RADIUS;
+                        world.spawnParticles(ParticleTypes.SNOWFLAKE,
+                                pos.x + offsetX, pos.y + offsetY, pos.z + offsetZ,
+                                1, 0, 0, 0, 0);
+                    }
+                }
+                if (states.isEmpty()) frozenTargets.remove(player.getUuid());
+            });
+        }
+    }
+
+    @Override
+    public DefaultOptions getDefaultData() {
+        return new DefaultOptions.Builder()
+                .cooldown(30)
+                .build();
     }
 }
