@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AbilityAbsoluteZero extends ThematicAbility {
 
-    private static final double RADIUS = 6.0;
+    private static final double RADIUS = 13.0;
     private static final int DURATION_TICKS = 20 * 12;
     private static final int TICK_INTERVAL = 20 * 3;
     private static final float DAMAGE_TOTAL = 24f;
