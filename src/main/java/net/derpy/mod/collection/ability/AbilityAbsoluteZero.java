@@ -23,6 +23,8 @@ public class AbilityAbsoluteZero extends ThematicAbility {
     private static final float DAMAGE_TOTAL = 24f;
     private static final double SHARD_START_OFFSET = 4.0;
     private static final double PARTICLE_RADIUS = 1.5;
+    private static final double SPHERE_RADIUS = 20.0;
+    private static final int SPHERE_DENSITY = 600;
 
     private static class TargetState {
         final LivingEntity entity;
@@ -52,7 +54,6 @@ public class AbilityAbsoluteZero extends ThematicAbility {
                 e -> e.isAlive() && e != player);
 
         List<TargetState> states = new ArrayList<>();
-
         for (LivingEntity target : targets) {
             states.add(new TargetState(target));
 
@@ -70,14 +71,13 @@ public class AbilityAbsoluteZero extends ThematicAbility {
         setCooldown(player, cooldown(player));
 
         startDamageAndFreezeTask(player, world, states);
+        spawnIceSphere(world, player);
     }
 
     private void startDamageAndFreezeTask(PlayerEntity player, ServerWorld world, List<TargetState> states) {
         float damagePerTick = DAMAGE_TOTAL / (DURATION_TICKS / TICK_INTERVAL);
 
         for (int tick = 0; tick < DURATION_TICKS; tick += TICK_INTERVAL) {
-            int delay = tick;
-
             world.getServer().execute(() -> {
                 Iterator<TargetState> it = states.iterator();
                 while (it.hasNext()) {
@@ -88,7 +88,8 @@ public class AbilityAbsoluteZero extends ThematicAbility {
                         continue;
                     }
 
-                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, TICK_INTERVAL + 5, 0, false, false));
+                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, TICK_INTERVAL + 5, 4, false, false));
+                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, TICK_INTERVAL + 5, 2, false, false));
                     target.setVelocity(Vec3d.ZERO);
                     target.velocityModified = true;
                     target.damage(world.getDamageSources().magic(), damagePerTick);
@@ -104,6 +105,25 @@ public class AbilityAbsoluteZero extends ThematicAbility {
                     }
                 }
                 if (states.isEmpty()) frozenTargets.remove(player.getUuid());
+            });
+        }
+    }
+
+    private void spawnIceSphere(ServerWorld world, PlayerEntity player) {
+        Vec3d center = player.getPos();
+
+        for (int tick = 0; tick < DURATION_TICKS; tick += 5) {
+            world.getServer().execute(() -> {
+                for (int i = 0; i < SPHERE_DENSITY; i++) {
+                    double theta = world.random.nextDouble() * 2 * Math.PI;
+                    double phi = world.random.nextDouble() * Math.PI;
+                    double radius = SPHERE_RADIUS * (0.6 + world.random.nextDouble() * 0.4);
+                    double x = center.x + radius * Math.sin(phi) * Math.cos(theta);
+                    double y = center.y + radius * Math.cos(phi);
+                    double z = center.z + radius * Math.sin(phi) * Math.sin(theta);
+
+                    world.spawnParticles(ParticleTypes.SNOWFLAKE, x, y, z, 1, 0, 0, 0, 0.01);
+                }
             });
         }
     }
