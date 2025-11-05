@@ -57,10 +57,8 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     @Override
     public void tick() {
         super.tick();
-
         this.noClip = true;
         this.setInvisible(false);
-
         if (getWorld().isClient()) return;
 
         ServerWorld serverWorld = (ServerWorld) getWorld();
@@ -84,13 +82,13 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
                 serverWorld.spawnParticles(ParticleTypes.SNOWFLAKE, getX(), getY(), getZ(), 20, 1, 1, 1, 0.1);
                 serverWorld.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.PLAYERS, 1.0f, 0.8f);
             }
-
             this.setVelocity(0, 0, 0);
         }
 
         applyFreezeEffect();
 
         if (this.age > 20 * 12) {
+            resetFrozenEntities();
             this.discard();
         }
     }
@@ -107,11 +105,10 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
             target.setVelocity(0, 0, 0);
             target.velocityModified = true;
             target.noClip = true;
-
+            target.setNoGravity(true);
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 10, false, false));
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 60, 10, false, false));
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 60, 250, false, false));
-
             if (target instanceof PathAwareEntity mob) {
                 mob.getNavigation().stop();
                 mob.getMoveControl().moveTo(target.getX(), target.getY(), target.getZ(), 0);
@@ -123,6 +120,17 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
             double offsetY = random.nextDouble() * 0.5;
             double offsetZ = (random.nextDouble() - 0.5) * 1.5;
             serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL, getX() + offsetX, getY() + offsetY, getZ() + offsetZ, 1, 0, 0, 0, 0);
+        }
+    }
+
+    private void resetFrozenEntities() {
+        List<LivingEntity> targets = getWorld().getEntitiesByClass(LivingEntity.class,
+                getBoundingBox().expand(1.5),
+                e -> e.isAlive() && e != owner);
+
+        for (LivingEntity target : targets) {
+            target.noClip = false;
+            target.setNoGravity(false);
         }
     }
 
@@ -160,6 +168,5 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     }
 
     @Override
-    protected void pushAway(Entity entity) {
-    }
+    protected void pushAway(Entity entity) {}
 }
