@@ -14,6 +14,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.entity.damage.DamageSource;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
@@ -27,6 +28,7 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     private LivingEntity owner;
     private double startY;
     private boolean effectApplied = false;
+    private int lastDamageTick = 0;
 
     public IceShardEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -62,7 +64,6 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         if (getWorld().isClient()) return;
 
         ServerWorld serverWorld = (ServerWorld) getWorld();
-
         double groundY = getY();
         for (int i = 0; i < 10; i++) {
             if (!getWorld().isAir(getBlockPos().down(i))) {
@@ -86,6 +87,11 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         }
 
         applyFreezeEffect();
+
+        if (this.age - lastDamageTick >= 20) {
+            applyDamageToFrozenTargets();
+            lastDamageTick = this.age;
+        }
 
         if (this.age > 20 * 12) {
             resetFrozenEntities();
@@ -123,6 +129,26 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         }
     }
 
+    private void applyDamageToFrozenTargets() {
+        if (!(getWorld() instanceof ServerWorld serverWorld)) return;
+
+        double radius = 1.5;
+        List<LivingEntity> targets = getWorld().getEntitiesByClass(LivingEntity.class,
+                getBoundingBox().expand(radius),
+                e -> e.isAlive() && e != owner);
+
+        for (LivingEntity target : targets) {
+            DamageSource damageSource = getWorld().getDamageSources().freeze();
+            target.damage(damageSource, 2.0F);
+
+            serverWorld.spawnParticles(
+                    ParticleTypes.SNOWFLAKE,
+                    target.getX(), target.getBodyY(0.5), target.getZ(),
+                    8, 0.2, 0.2, 0.2, 0.02
+            );
+        }
+    }
+
     private void resetFrozenEntities() {
         List<LivingEntity> targets = getWorld().getEntitiesByClass(LivingEntity.class,
                 getBoundingBox().expand(1.5),
@@ -131,10 +157,8 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         for (LivingEntity target : targets) {
             target.noClip = false;
             target.setNoGravity(false);
-
             target.setVelocity(0, -0.1, 0);
             target.velocityModified = true;
-
             target.removeStatusEffect(StatusEffects.SLOWNESS);
             target.removeStatusEffect(StatusEffects.MINING_FATIGUE);
             target.removeStatusEffect(StatusEffects.JUMP_BOOST);
@@ -144,7 +168,6 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
             }
         }
     }
-
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
@@ -160,12 +183,12 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
     }
 
     @Override
-    public boolean damage(net.minecraft.entity.damage.DamageSource source, float amount) {
+    public boolean damage(DamageSource source, float amount) {
         return false;
     }
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier, net.minecraft.entity.damage.DamageSource damageSource) {
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
