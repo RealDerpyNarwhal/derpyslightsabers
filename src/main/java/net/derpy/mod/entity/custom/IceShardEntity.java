@@ -131,8 +131,20 @@ public class IceShardEntity extends PathAwareEntity implements GeoAnimatable {
         for (LivingEntity target : targets) {
             target.noClip = false;
             target.setNoGravity(false);
+
+            target.setVelocity(0, -0.1, 0);
+            target.velocityModified = true;
+
+            target.removeStatusEffect(StatusEffects.SLOWNESS);
+            target.removeStatusEffect(StatusEffects.MINING_FATIGUE);
+            target.removeStatusEffect(StatusEffects.JUMP_BOOST);
+
+            if (target instanceof PathAwareEntity mob) {
+                mob.getNavigation().startMovingTo(mob.getX(), mob.getY(), mob.getZ(), 1.0);
+            }
         }
     }
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
