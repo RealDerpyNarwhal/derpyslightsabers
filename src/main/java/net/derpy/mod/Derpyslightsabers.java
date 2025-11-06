@@ -40,6 +40,7 @@ public class Derpyslightsabers implements ModInitializer {
 		Thematic.addCollection(lightsaberCollection);
 		lightsaberCollection.initServer();
 
+		// Register PsychicCollection
 		PsychicCollection psychicCollection = new PsychicCollection();
 		Thematic.addCollection(psychicCollection);
 		psychicCollection.initServer();

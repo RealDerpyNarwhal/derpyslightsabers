@@ -9,7 +9,8 @@ import net.derpy.mod.collection.ability.AbilityMindCrush;
 import net.derpy.mod.collection.ability.AbilityPsychicRift;
 import net.derpy.mod.collection.ability.AbilityPsychicVortex;
 import net.derpy.mod.collection.ability.AbilityDroneSwarm;
-import net.derpy.mod.collection.ability.AbilityAbsoluteZero; // <-- added
+import net.derpy.mod.collection.ability.AbilityAbsoluteZero;
+import net.derpy.mod.collection.ability.AbilityDoubleHelix; // <-- added
 import net.derpy.mod.collection.armor.PsychicArmor;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class PsychicCollection extends Collection {
             AbilityRegistry.registerAbility(new AbilityPsychicVortex("psychic_vortex"));
             AbilityRegistry.registerAbility(new AbilityDroneSwarm("drone_swarm"));
             AbilityRegistry.registerAbility(new AbilityAbsoluteZero("absolute_zero"));
+            AbilityRegistry.registerAbility(new AbilityDoubleHelix("double_helix"));
 
             registered = true;
         }
@@ -43,8 +45,10 @@ public class PsychicCollection extends Collection {
         return List.of(
                 new AbilityMindCrush("mind_crush"),
                 new AbilityPsychicRift("psychic_rift"),
+                new AbilityPsychicVortex("psychic_vortex"),
                 new AbilityDroneSwarm("drone_swarm"),
-                new AbilityAbsoluteZero("absolute_zero")
+                new AbilityAbsoluteZero("absolute_zero"),
+                new AbilityDoubleHelix("double_helix")
         );
     }
 }

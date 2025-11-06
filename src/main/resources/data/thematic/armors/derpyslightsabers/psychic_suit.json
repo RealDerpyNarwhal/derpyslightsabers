@@ -21,6 +21,10 @@
     {
       "identifier": "absolute_zero",
       "keybind": "key.thematic.ability_4"
+    },
+    {
+      "identifier": "double_helix",
+      "keybind": "key.thematic.ability_5"
     }
   ],
   "attributes": [
