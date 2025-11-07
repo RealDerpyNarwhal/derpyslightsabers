@@ -14,7 +14,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class AbilityMindCrush extends ThematicAbility {
 
     private final Map<UUID, Integer> activeDurations = new HashMap<>();
     private final Map<String, Integer> damageCooldowns = new HashMap<>();
-    private final Map<UUID, Double> entityLiftHeights = new HashMap<>();
+    private final Map<UUID, Map<UUID, Double>> entityLiftHeightsByPlayer = new HashMap<>();
 
     private static final double RADIUS = 1.0;
     private static final double HEIGHT = 2.5;
@@ -49,22 +48,16 @@ public class AbilityMindCrush extends ThematicAbility {
 
             UUID playerId = player.getUuid();
 
-            if (!isActive(player, this.getId())) {
-                activeDurations.remove(playerId);
-                damageCooldowns.keySet().removeIf(key -> key.startsWith(playerId.toString()));
-                entityLiftHeights.clear();
-                return;
-            }
+            if (!activeDurations.containsKey(playerId)) return;
 
-            int duration = activeDurations.getOrDefault(playerId, 0);
+            int duration = activeDurations.get(playerId);
             if (duration <= 0) {
                 setActive(player, this.getId(), cooldown(player), false);
                 activeDurations.remove(playerId);
                 damageCooldowns.keySet().removeIf(key -> key.startsWith(playerId.toString()));
-                entityLiftHeights.clear();
+                entityLiftHeightsByPlayer.remove(playerId);
                 return;
             }
-
             activeDurations.put(playerId, duration - 1);
 
             World world = player.getWorld();
@@ -74,11 +67,13 @@ public class AbilityMindCrush extends ThematicAbility {
                     e -> e.isAlive() && e != player && player.canSee(e)
             );
 
+            Map<UUID, Double> playerLiftHeights = entityLiftHeightsByPlayer.computeIfAbsent(playerId, k -> new HashMap<>());
+
             for (LivingEntity target : targets) {
                 UUID targetId = target.getUuid();
 
                 double hoverHeight = 3.0;
-                double fixedLiftY = entityLiftHeights.computeIfAbsent(targetId, id -> target.getY() + hoverHeight);
+                double fixedLiftY = playerLiftHeights.computeIfAbsent(targetId, id -> target.getY() + hoverHeight);
 
                 double deltaY = fixedLiftY - target.getY();
                 double liftSpeed = 0.3;
