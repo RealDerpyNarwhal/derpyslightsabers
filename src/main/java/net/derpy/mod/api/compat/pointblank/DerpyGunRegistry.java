@@ -27,6 +27,7 @@ public final class DerpyGunRegistry {
     public static final Supplier<GunItem> JOKER_REVOLVER;
     public static final Supplier<GunItem> TWOFACEREVOLVER;
     public static final Supplier<GunItem> TOMMYGUN;
+    public static final Supplier<GunItem> DC17;
 
     public DerpyGunRegistry() {
     }
@@ -40,6 +41,7 @@ public final class DerpyGunRegistry {
         entries.accept(JOKER_REVOLVER.get());
         entries.accept(TWOFACEREVOLVER.get());
         entries.accept(TOMMYGUN.get());
+        entries.accept(DC17.get());
     }
 
     public static void init() {
@@ -315,6 +317,45 @@ public final class DerpyGunRegistry {
                                         new GunItem.ReloadShakeEffect(0L, 3200L, 0.2, 0.7),
                                         new GunItem.ReloadShakeEffect(300L, 1000L, 0.25, 0.4),
                                         new GunItem.ReloadShakeEffect(1500L, 1000L, 0.2, 0.3))))
+        );
+        DC17 = ItemRegistry.ITEMS.register(
+                new GunItem.Builder()
+                        .withName("dc17")
+                        .withCompatibleAmmo(AmmoRegistry.AMMOCREATIVE)
+                        .withMaxAmmoCapacity(6)
+                        .withDamage(15.0F)
+                        .withRpm(89)
+                        .withFireModes(FireMode.SINGLE)
+                        .withFireSound(DerpySoundRegistry.WESTAR34_FIRE)
+                        .withDrawCooldownDuration(1200, TimeUnit.MILLISECOND)
+                        .withInspectCooldownDuration(4516, TimeUnit.MILLISECOND)
+                        .withGunRecoilInitialAmplitude(0.8)
+                        .withShakeRecoilAmplitude(0.35)
+                        .withShakeRecoilSpeed(3.0)
+                        .withViewRecoilAmplitude(3.0)
+                        .withFeature(new MuzzleFlashFeature.Builder()
+                                .withEffect(FirePhase.FIRING, DerpyEffectRegistry.BLASTER_FLASH_BLUE)
+                                .withCondition(Conditions.doesNotHaveAttachmentGroup("smg_suppressors")))
+                        .withFeature(new AimingFeature.Builder()
+                                .withCondition(Conditions.doesNotHaveAttachmentGroup("hg_sights"))
+                                .withZoom(0.25))
+                        .withFeature(new PartVisibilityFeature.Builder()
+                                .withShownPart("sightmount", Conditions.hasAttachmentGroup("hg_sights")))
+                        .withCompatibleAttachmentGroup("hg_sights")
+                        .withCompatibleAttachmentGroup("smg_muzzle")
+                        .withCompatibleAttachmentGroup("m1911a1_skins")
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reloadempty", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
+                        .withPhasedReload(ReloadPhase.RELOADING, Conditions.onNonEmptyReload(), 2866L,
+                                new GunItem.ReloadAnimation("animation.model.reload", List.of(
+                                        new GunItem.ReloadShakeEffect(0L, 2866L, 0.2, 0.8),
+                                        new GunItem.ReloadShakeEffect(170L, 1000L, 0.35, 0.4),
+                                        new GunItem.ReloadShakeEffect(530L, 800L, 0.13, 0.5),
+                                        new GunItem.ReloadShakeEffect(730L, 400L, 0.2, 0.3))))
         );
     }
 }

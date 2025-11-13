@@ -1,0 +1,55 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+
+  "base": {
+    "credit": "Made with Blockbench",
+    "parent": "builtin/entity",
+    "texture_size": [64, 64],
+
+    "display": {
+      "thirdperson_righthand": {
+        "translation": [0, -5.25, 1.75],
+        "scale": [0.34, 0.34, 0.23]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [-21.5, 0, 0],
+        "translation": [-12.25, -7.75, 3.25],
+        "scale": [0.34, 0.34, 0.23]
+      },
+      "firstperson_righthand": {
+        "translation": [5.5, -31, -21]
+      },
+      "firstperson_lefthand": {
+        "translation": [-23.5, -25, -21]
+      },
+      "ground": {
+        "translation": [5.5, 0, 0],
+        "scale": [0.34, 0.34, 0.34]
+      },
+      "gui": {
+        "rotation": [90.04, -56.02, 90],
+        "translation": [0, -9, 0],
+        "scale": [0.36, 0.36, 0.36]
+      },
+      "fixed": {
+        "rotation": [90, 56, -90],
+        "translation": [0, -9, 0],
+        "scale": [0.36, 0.36, 0.36]
+      }
+    },
+
+    "textures": {
+      "particle": "pointblank:item/dc17"
+    }
+  },
+
+  "perspectives": {
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "pointblank:item/dc17_icon"
+      }
+    }
+  }
+}
